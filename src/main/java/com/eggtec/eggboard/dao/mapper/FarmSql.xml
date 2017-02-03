@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FarmDao">
+    <select id="selectBinListByFarm" parameterType="Farm" resultType="Bin">
+        /* selectBinListByFarm */
+        SELECT work_seq         workSeq
+             , serial_no        serialNo
+             , bin_no           binNo
+             , current_weight   currentWeight
+             , used_weight      usedWeight
+             , add_weight       addWeight
+             , reg_dtm          regDtm
+             , mod_dtm          modDtm
+        FROM   tb_bin
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY bin_no
+    </select>
+    
+    <select id="selectFanListByFarm" parameterType="Farm" resultType="Fan">
+        /* selectFanListByFarm */
+        SELECT work_seq     workSeq
+             , serial_no    serialNo
+             , fan_no       fanNo
+             , status       status
+             , reg_dtm      regDtm
+             , mod_dtm      modDtm
+        FROM   tb_fan
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY fan_no
+    </select>
+    
+    <select id="selectLightListByFarm" parameterType="Farm" resultType="Light">
+        /* selectLightListByFarm */
+        SELECT work_seq     workSeq
+             , serial_no    serialNo
+             , light_no     lightNo
+             , lux          lux
+             , reg_dtm      regDtm
+             , mod_dtm      modDtm
+        FROM   tb_light
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY light_no
+    </select>
+    
+    <select id="selectThermoListByFarm" parameterType="Farm" resultType="Thermometer">
+        /* selectThermoListByFarm */
+        SELECT work_seq         workSeq
+             , serial_no        serialNo
+             , thermometer_no   thermometerNo
+             , degree           degree
+             , reg_dtm          regDtm
+             , mod_dtm          modDtm
+        FROM   tb_thermometer
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY thermometer_no
+    </select>
+    
+    <select id="selectTodayWaterListByFarm" parameterType="Farm" resultType="Farm">
+        SELECT work_seq
+             , serial_no
+             , water_qntty
+             , reg_dtm
+        FROM tb_farm
+        WHere serial_no = #{serialNo}
+        AND type = 'F'
+        AND water_qntty IS NOT NULL
+        AND reg_dtm >= STR_TO_DATE(#{today}, '%Y%m%d%H%i%s')
+        ORDER BY work_seq
+    </select>
+    
+    <select id="selectBinListByBin" parameterType="Bin" resultType="Bin">
+        /* selectBinListByBin */
+        <![CDATA[
+        SELECT work_seq
+             , SUM(current_weight)  currentWeight
+             , SUM(used_weight)     usedWeight
+             , SUM(add_weight)      addWeight
+             , DATE_FORMAT(reg_dtm, '%Y%m%d') workDate
+        FROM   tb_bin
+        WHERE  work_seq IN (
+                            SELECT MAX(work_seq)
+                            FROM (
+                                SELECT work_seq
+                                     , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
+                                FROM   tb_farm
+                                WHERE  serial_no = #{serialNo}
+                                AND    farm_no = 1
+                                AND    type = 'F'
+                                ANd    reg_dtm >= STR_TO_DATE(CONCAT(#{fromDate}, '000000'), '%Y%m%d%H%i%s')
+                                AND    reg_dtm < STR_TO_DATE(CONCAT(#{toDate}, '235959'), '%Y%m%d%H%i%s')
+                            ) a
+                            GROUP BY a.work_date
+               )
+        GROUP BY work_seq
+        ORDER BY work_seq
+        ]]>
+    </select>
+    
+    <select id="selectWaterListByFarm" parameterType="Farm" resultType="Farm">
+        /* selectWaterListByWater */
+        <![CDATA[
+        SELECT work_seq
+             , water_qntty  waterQntty
+             , DATE_FORMAT(reg_dtm, '%Y%m%d') workDate
+        FROM   tb_farm
+        WHERE  work_seq IN (
+                            SELECT MAX(work_seq)
+                            FROM (
+                                SELECT work_seq
+                                     , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
+                                FROM   tb_farm
+                                WHERE  serial_no = #{serialNo}
+                                AND    farm_no = 1
+                                AND    type = 'F'
+                                ANd    reg_dtm >= STR_TO_DATE(CONCAT(#{fromDate}, '000000'), '%Y%m%d%H%i%s')
+                                AND    reg_dtm < STR_TO_DATE(CONCAT(#{toDate}, '235959'), '%Y%m%d%H%i%s')
+                            ) a
+                            GROUP BY a.work_date
+               )
+        ORDER BY work_seq
+        ]]>
+    </select>
+
+</mapper>
+

@@ -1,0 +1,692 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="KO">
+<head>
+    <meta charset="utf-8">
+    <meta property="og:title" content="EGG-Board">
+    <meta property="og:url" content="https://www.???.com/">
+    <meta property="og:description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>EGG-Board</title>
+    <link type="text/css" rel="stylesheet" href="/css/global.css" />    
+    <link type="text/css" rel="stylesheet" href="/css/style_pc.css" />
+    <link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/jquery.jqplot.min.css" />
+    
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script type="text/javascript">
+    var checkedId = false;
+    var checkedEmail = false;
+    jQuery(document).ready(function(){
+        //tab menu
+        jQuery(".tab_con").hide();
+        jQuery(".tab_con01").show();
+        
+        jQuery(".tab li a").click(function(){
+
+            jQuery(".tab li a").removeClass("active");
+            jQuery(this).addClass("active");
+            
+            var idx = jQuery(this).index(".tab li a");      
+            jQuery(".tab_con").hide();
+            jQuery(".tab_con0"+(idx+1)).show();
+            
+            return false; 
+        });
+        
+        // 주소검색
+        jQuery(".btn_search_address a").click(function(){
+            jQuery(".gray_wrap").show();    
+        });
+        jQuery(".btn_close").click(function(){
+            jQuery(".gray_wrap").hide();    
+        });
+        
+        $(".entDt").datepicker();
+        
+        // 아이디
+        $("input#userId").on("click", function() {
+            $("#spanUserIdNotice").hide();
+        }).on("blur", function() {
+            if (!validateId($(this).val())) {
+                $("#spanUserIdNotice").show();
+            } else {
+                $("#spanUserIdNotice").hide();
+            }
+        }).on("keydown", function() {
+           checkedId = false;
+        });
+        
+        // 비밀번호
+        $("input#userPw").on("click", function() {
+            $("#spanUserPwNotice").hide();
+        }).on("blur", function() {
+            if (!validatePw($(this).val())) {
+                $("#spanUserPwNotice").show();
+            } else {
+                $("#spanUserPwNotice").hide();
+            }
+        });
+        
+        // 비밀번호 재입력
+        $("input#userPwChk").on("click", function() {
+            $("#spanUserPwChkNotice").hide();
+        }).on("blur", function() {
+            if (!validatePwChk($(this).val())) {
+                $("#spanUserPwChkNotice").show();
+            } else {
+                $("#spanUserPwChkNotice").hide();
+            }
+        });
+        
+        // 이메일
+        $("input#userEmail").on("click", function() {
+            $("#spanUserEmailNotice").hide();
+        }).on("blur", function() {
+            if (!validateEmail($(this).val())) {
+                $("#spanUserEmailNotice").show();
+            } else {
+                $("#spanUserEmailNotice").hide();
+            }
+        }).on("keydown", function() {
+           checkedEmail = false;
+        });
+        
+        $("input.henCount").on("keyup", function() {
+            var val = $(this).val();
+            var lastInput = val.substring(val.length - 1, val.length);
+            var pattern = /[0-9/b]/gi;
+            if (pattern.test(lastInput)) {
+                var tot = 0;
+                $(".henCount").each(function() {
+                    var num = 0;
+                    if ($(this).val() != "") {
+                        num = parseInt($(this).val());
+                    }
+                    tot = tot + num;
+                });
+                $("input#allhenNo").val(tot);
+            } else {
+                var oldVal = val.substring(0, val.length - 1);
+                $(this).val(oldVal);
+            }
+        });
+        
+        $("select#farmNo").on("change", function() {
+           var totCnt = $(this).val();
+           var m = parseInt(totCnt / 2);
+           var n = totCnt % 2;
+           $("#tbodyOdd").html("");
+           $("#tbodyEven").html("");
+           
+           for (i = 0; i < m; i++) {
+               var htmlStr1 = "<tr>"
+                                + "<td>" + (i*2+1) + "</td>"
+                                + "<td><input type=\"text\" class=\"henCount\" name=\"henCount\" placeholder=\"0\"></td>"
+                                + "<td class=\"last\"><input type=\"text\" class=\"entDt\" name=\"entDt\" placeholder=\"\" ></td>"
+                            + "</tr>";
+               $("#tbodyOdd").append(htmlStr1);
+               var htmlStr2 = "<tr>"
+                                + "<td>" + (i*2+2) + "</td>"
+                                + "<td><input type=\"text\" class=\"henCount\" name=\"henCount\" placeholder=\"0\"></td>"
+                                + "<td class=\"last\"><input type=\"text\" class=\"entDt\" name=\"entDt\" placeholder=\"\" ></td>"
+                            + "</tr>";
+               $("#tbodyEven").append(htmlStr2);
+           }
+           
+           if (n == 1) {
+               var htmlStr3 = "<tr>"
+                                + "<td>" + totCnt + "</td>"
+                                + "<td><input type=\"text\" class=\"henCount\" name=\"henCount\" placeholder=\"0\"></td>"
+                                + "<td class=\"last\"><input type=\"text\" class=\"entDt\" name=\"entDt\" placeholder=\"\" ></td>"
+                            + "</tr>";
+               $("#tbodyOdd").append(htmlStr3);
+           }
+           
+           $("input#allhenNo").val(0);
+           $(".entDt").datepicker();
+           //.datepicker("option", "dateFormat", "yy.mm.dd");
+           $("input.henCount").on("keyup", function() {
+               var val = $(this).val();
+               var lastInput = val.substring(val.length - 1, val.length);
+               var pattern = /[0-9/b]/gi;
+               if (pattern.test(lastInput)) {
+                   var tot = 0;
+                   $(".henCount").each(function() {
+                       var num = 0;
+                       if ($(this).val() != "") {
+                           num = parseInt($(this).val());
+                       }
+                       tot = tot + num;
+                   });
+                   $("input#allhenNo").val(tot);
+               } else {
+                   var oldVal = val.substring(0, val.length - 1);
+                   $(this).val(oldVal);
+               }
+           });
+        });
+        
+    });
+    
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if(data.userSelectedType === 'R'){
+                    //법정동명이 있을 경우 추가한다.
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                //document.getElementById('sample6_postcode').value = data.zonecode; //5자리 새우편번호 사용
+                $("input#userAddress1").val(fullAddr);
+
+                // 커서를 상세주소 필드로 이동한다.
+                $("input#userAddress2").focus();
+            }
+        }).open();
+    }
+    
+    // 아이디 유효성
+    function validateId(id) {
+        if (isEmpty(id)) {
+            return false;
+        }
+
+        if (id.length > 12) {
+            return false;
+        }
+        
+        var pattern = /[^A-Z0-9]/gi;
+        if (pattern.test(id)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function checkId() {
+        var id = $("input#userId").val();
+        
+        if (!isEmpty(id) && validateId(id)) {
+            $.ajax({
+                url: "/user/checkId.do",
+                data: {id: id},
+                success: function (data) {
+                    if (data.result) {
+                        checkedId = false;
+                        alert("사용할 수 없는 아이디입니다. 다른 아이디를 사용해주세요.");
+                    } else {
+                        checkedId = true;
+                        alert("사용가능한 아이디입니다.");
+                    }
+                }
+            });
+        }
+    }
+    
+    function checkEmail() {
+        var email = $("input#userEmail").val();
+        
+        if (!isEmpty(email) && validateEmail(email)) {
+            $.ajax({
+                url: "/user/checkEmail.do",
+                data: {email: email},
+                success: function (data) {
+                    if (data.result) {
+                        checkedEmail = false;
+                        alert("사용할 수 없는 이메일입니다. 다른 이메일을 사용해주세요.");
+                    } else {
+                        checkedEmail = true;
+                        alert("사용가능한 이메일입니다.");
+                    }
+                }
+            });
+        }
+    }
+    
+    // 비밀번호 유효성
+    function validatePw(pw) {
+        if (isEmpty(pw)) {
+            return false;
+        }
+
+        if (pw.length > 12) {
+            return false;
+        }
+        
+        var pattern1 = /[A-Z]/gi;
+        var pattern2 = /[0-9]/gi;
+        var pattern3 = /[~!@#$%^&*|\\\'\";:\/?]/gi;
+        if (!pattern1.test(pw) || !pattern2.test(pw) || !pattern3.test(pw)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // 비밀번호 재입력
+    function validatePwChk(str) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        
+        if (str.length > 12) {
+            return false;
+        }
+        
+        var pw = $("input#userPw").val();
+        
+        if (str != pw) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // 이메일 유효성
+    function validateEmail(email) {
+        if (isEmpty(email)) {
+            return false;
+        }
+
+        if (email.length > 30) {
+            return false;
+        }
+        
+        var pattern = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+        if (!pattern.test(email)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    function registUser() {
+        var form = $("form[name='registForm']");
+        //var userId = form.find("input[name='userId']");
+
+        if (!validateParam(form.find("input[name='userId']"), "아이디를 입력해 주세요.")) {
+            return false;
+        }
+        /* if (!validateParam(form.find("input[name='userPw']"), "비밀번호를 입력해 주세요.")) {
+            return false;
+        } */
+        if (!validateParam(form.find("input[name='userName']"), "이름을 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userMphone']"), "휴대전화를 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userEmail']"), "이메일을 입력해 주세요.")) {
+            return false;
+        }
+        if (!checkedEmail) {
+            alert("이메일 중복 확인을 해주세요.");
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userAddress1']"), "주소를 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userAddress2']"), "주소를 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='farmName']"), "농장명칭을 입력해 주세요.")) {
+            return false;
+        }
+        
+        var valid = true;
+        $(".henCount").each(function() {
+            if($(this).val() == "") {
+                alert("개체수를 입력해 주세요.");
+                $(this).focus();
+                valid = false;
+                return false;
+            }
+        });
+        
+        if (!valid) {
+            return false;
+        }
+        
+        $(".entDt").each(function() {
+            if($(this).val() == "") {
+                alert("입추일을 입력해 주세요.");
+                $(this).focus();
+                valid = false;
+                return false;
+            }
+        });
+        
+        if (!valid) {
+            return false;
+        }
+        
+        form.submit();
+    }
+    </script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- S: header -->
+    <header role="banner">
+        <div class="header">
+            <h1 class="logo"><a href="/frt/eggStatus.do"><img src="/images/logo.gif" alt="EGG-Board" /></a></h1>
+            <a class="btn-mypage"><img src="/images/sub_logo.gif" alt="eggtec" /></a>
+        </div>
+    </header>
+    <!-- E: header -->
+
+    <!-- S: contents -->
+    <article>
+        <div class="contents main_contents clearfix">
+            <!-- S: link_state -->
+            <div class="link_state">
+                <div class="today">
+                    <p><fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/></>
+                    <p><fmt:formatDate value="${today}" pattern="E"/>요일</p>
+                </div>
+                <div class="login_info">
+                    <p>
+                        <c:if test="${empty user.photoInfo}">
+                            <img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" />
+                        </c:if>
+                        <c:if test="${not empty user.photoInfo}">
+                            <img src="${user.photoInfo }" width="100%" height="auto" alt="농장이름" />
+                        </c:if>
+                        
+                        
+                        <span>${user.farmName}</span>
+                    </p>
+                    <p><a href="/logout.do">로그아웃</a></p>
+                    <p><a href="/frt/mypageView.do">정보수정</a></p>
+                </div>
+                <div class="data">
+                    <div class="communication">
+                        <p>통신</p>
+                        <c:if test="${farm.connectionStatus == '0'}">
+                            <p class="gradient01">에러</p>
+                        </c:if>
+                        <c:if test="${farm.connectionStatus == '1'}">
+                            <p class="gradient01">정상</p>
+                        </c:if>
+                    </div>
+                    <div class="equipment">
+                        <p>장비연결</p>
+                        <c:if test="${farm.status == '0'}">
+                            <p class="gradient02">에러</p>
+                        </c:if>
+                        <c:if test="${farm.status == '1'}">
+                            <p class="gradient02">정상</p>
+                        </c:if>
+                    </div>
+                </div>
+                <div class="now_state">
+                    <p><span class="gradient03">정상 동작중</span></p>
+                    <p class="time">오전 12시 30분</p>
+                    <p>현재 상태는<br/>정상 동작중입니다.</p>
+                    <p class="refresh"><a href="#">새로고침<i></i></a></p>
+                </div>
+                <p class="neonics"><img src="/images/img_neonics.gif" width="100%" height="auto" alt="Solution by NEONICS" /></p>
+            </div>
+            <!-- E: link_state -->
+            
+            <!-- S: contents_detail -->
+            <div class="contents_detail_wrap">
+                <div class="contents_detail">
+                    
+                    <!-- S: join -->
+                    <div class="join_wrap">
+                        <form name="registForm" method="post" action="/frt/modifyUser.do" enctype="multipart/form-data">
+                            <div class="join_info">
+                                <ul class="info_table">
+                                    <li>
+                                        <span class="th">아이디</span>
+                                        <div>
+                                            <input type="text" id="userId" class="" name="userId" value="${member.userId}" placeholder="영문 또는 숫자 4~12자" maxlength="12" readonly="readonly">
+                                            <!-- <span class="notice" id="spanUserIdNotice" style="display:none;">올바른 아이디를 입력해주세요.</span>
+                                            <span class="btn medium"><a href="javascript://" onclick="checkId();">중복 확인</a></span> -->
+                                        </div>
+                                    </li>
+                                    <!-- <li>
+                                        <span class="th">비밀번호</span>
+                                        <div>
+                                            <input type="password" id="userPw" class="" name="userPw" placeholder="영문/숫자/특수문자 조합 6~12자" maxlength="12">
+                                            <span class="notice" id="spanUserPwNotice" style="display:none;">올바른 비밀번호를 입력해주세요.</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">비밀번호 확인</span>
+                                        <div>
+                                            <input type="password" id="userPwChk" class="" name="userPwChk" placeholder="영문/숫자/특수문자 조합 6~12자" maxlength="12">
+                                            <span class="notice" id="spanUserPwChkNotice" style="display:none;">비밀번호가 다릅니다.</span>
+                                        </div>
+                                    </li> -->
+                                    <li>
+                                        <span class="th">이름</span>
+                                        <div>
+                                            <input type="text" id="userName" class="" name="userName" value="${member.userName}" placeholder="" maxlength="10">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">휴대전화</span>
+                                        <div class="phone_area">
+                                            <input type="tel" id="userMphone" class="" name="userMphone" value="${member.userMphone}" maxlength="11" placeholder="'-'제외하고 숫자만 입력" >                                       
+                                            <!-- <span class="btn small"><a href="/">인증</a></span> -->
+                                            <!-- <input type="tel" id="confirmNo" class="" name="confirmNo" maxlength="" placeholder="인증번호를 입력하세요" > -->
+                                            <!-- <span class="btn small"><a href="/">확인</a></span> -->
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">이메일</span>
+                                        <div>
+                                            <input type="text" id="userEmail" class="" name="userEmail" value="${member.userEmail}" placeholder="" maxlength="30">
+                                            <span class="notice" id="spanUserEmailNotice" style="display:none;">올바른 메일형식으로 입력해 주세요.</span>
+                                            <span class="btn medium"><a href="javascript://" onclick="checkEmail();">중복확인</a></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">주소</span>
+                                        <div>
+                                            <input type="text" id="userAddress1" class="" name="userAddress1" value="${member.userAddress1}" placeholder="" >
+                                            <span class="btn medium btn_search_address">
+                                                <a href="javascript://" onclick="execDaumPostcode();">주소검색</a>
+                                            </span>
+                                            <input type="text" id="userAddress2" class="" name="userAddress2" value="${member.userAddress2}" placeholder="" >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">농장명칭</span>
+                                        <div>
+                                            <input type="text" id="farmName" class="" name="farmName" value="${member.farmName}" placeholder="" maxlength="10">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="th">사진</span>
+                                        <div>
+                                            <input type="file" id="uploadFile" class="" name="uploadFile" placeholder="" >
+                                        </div>
+                                        
+                                    </li>
+                                    <li class="select_li">
+                                        <div class="left">
+                                            <span class="th">계사총수</span>
+                                            <div>
+                                                
+                                                <select name="farmNo" id="farmNo">
+                                                    <!-- <option value="선택하세요"> 선택하세요 </option> -->
+                                                    <option value="1" <c:if test="${fn:length(member.henList) == 1}">selected="selected"</c:if>> 1 </option>
+                                                    <option value="2" <c:if test="${fn:length(member.henList) == 2}">selected="selected"</c:if>> 2 </option>
+                                                    <option value="3" <c:if test="${fn:length(member.henList) == 3}">selected="selected"</c:if>> 3 </option>
+                                                    <option value="4" <c:if test="${fn:length(member.henList) == 4}">selected="selected"</c:if>> 4 </option>
+                                                    <option value="5" <c:if test="${fn:length(member.henList) == 5}">selected="selected"</c:if>> 5 </option>
+                                                    <option value="6" <c:if test="${fn:length(member.henList) == 6}">selected="selected"</c:if>> 6 </option>
+                                                    <option value="7" <c:if test="${fn:length(member.henList) == 7}">selected="selected"</c:if>> 7 </option>
+                                                    <option value="8" <c:if test="${fn:length(member.henList) == 8}">selected="selected"</c:if>> 8 </option>
+                                                    <option value="9" <c:if test="${fn:length(member.henList) == 9}">selected="selected"</c:if>> 9 </option>
+                                                    <option value="10" <c:if test="${fn:length(member.henList) == 10}">selected="selected"</c:if>> 10 </option>
+                                                    <option value="11" <c:if test="${fn:length(member.henList) == 11}">selected="selected"</c:if>> 11 </option>
+                                                    <option value="12" <c:if test="${fn:length(member.henList) == 12}">selected="selected"</c:if>> 12 </option>
+                                                    <option value="13" <c:if test="${fn:length(member.henList) == 13}">selected="selected"</c:if>> 13 </option>
+                                                    <option value="14" <c:if test="${fn:length(member.henList) == 14}">selected="selected"</c:if>> 14 </option>
+                                                    <option value="15" <c:if test="${fn:length(member.henList) == 15}">selected="selected"</c:if>> 15 </option>
+                                                    <option value="16" <c:if test="${fn:length(member.henList) == 16}">selected="selected"</c:if>> 16 </option>
+                                                    <option value="17" <c:if test="${fn:length(member.henList) == 17}">selected="selected"</c:if>> 17 </option>
+                                                    <option value="18" <c:if test="${fn:length(member.henList) == 18}">selected="selected"</c:if>> 18 </option>
+                                                    <option value="19" <c:if test="${fn:length(member.henList) == 19}">selected="selected"</c:if>> 19 </option>
+                                                    <option value="20" <c:if test="${fn:length(member.henList) == 20}">selected="selected"</c:if>> 20 </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="right">
+                                            <span class="th">개체총수</span>
+                                            <div>
+                                                <c:forEach var="hen" items="${member.henList}">
+                                                    <c:set var="totCnt" value="${totCnt + hen.henCount}"/>
+                                                </c:forEach>
+                                                <fmt:formatNumber var="totCnt1" value="${totCnt}" pattern="#,###"/>
+                                                <input type="text" id="allhenNo" class="" name="allhenNo" value="${totCnt1}" placeholder="" value="0" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="tabal_wrap">
+                                    <table class="henhouse_table henhouse01">
+                                        <colgroup>
+                                            <col width="90px">
+                                            <col width="80px">
+                                            <col width="160px">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>계사번호</th>
+                                                <th>개체수</th>
+                                                <th>입추일</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyOdd">
+                                            <c:forEach var="hen" items="${member.henList}">
+                                                <c:if test="${hen.farmNo%2 == 1}">
+                                                    <tr>
+                                                        <td>${hen.farmNo}</td>
+                                                        <td>
+                                                            <input type="text" class="henCount" name="henCount" value="${hen.henCount}" placeholder="0">
+                                                        </td>
+                                                        <td class="last">
+                                                            <fmt:parseDate var="entDt" value="${hen.entDt}" pattern="yyyyMMdd"/>
+                                                            <fmt:formatDate var="entDt1" value="${entDt}" pattern="yyyy-MM-dd"/>
+                                                            <input type="text" class="entDt" name="entDt" value="${entDt1}" readonly="readonly">
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                            
+                                        </tbody>
+                                    </table>
+                                    <table class="henhouse_table henhouse02">
+                                        <colgroup>
+                                            <col width="90px">
+                                            <col width="80px">
+                                            <col width="160px">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>계사번호</th>
+                                                <th>개체수</th>
+                                                <th>입추일</th>
+                                            </tr>
+                                        </thead>
+                
+                                        <tbody id="tbodyEven">
+                                            <c:forEach var="hen" items="${member.henList}">
+                                                <c:if test="${hen.farmNo%2 == 0}">
+                                                    <tr>
+                                                        <td>${hen.farmNo}</td>
+                                                        <td>
+                                                            <input type="text" class="henCount" name="henCount" value="${hen.henCount}" placeholder="0">
+                                                        </td>
+                                                        <td class="last">
+                                                            <fmt:parseDate var="entDt" value="${hen.entDt}" pattern="yyyyMMdd"/>
+                                                            <fmt:formatDate var="entDt1" value="${entDt}" pattern="yyyy-MM-dd"/>
+                                                            <input type="text" class="entDt" name="entDt" value="${entDt1}" readonly="readonly">
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                        </form>
+                        
+                        <div class="btn_big btn_join_member">
+                            <a href="javascript://" onclick="registUser();">
+                                <img src="/images/btn_join_member.gif" alt="회원가입" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- E: join -->
+                    
+                </div>
+            </div>
+            <!-- E: contents_detail -->
+            
+            
+        </div>
+
+    </article>
+    <!-- E: contents -->
+
+            
+
+    <!-- Footer -->
+    <footer>
+        <!-- S: Site Info -->
+        <div class="siteInfo clearfix">
+            <ul>
+                <li><a href="http://eggtec.com/%ED%9A%8C%EC%82%AC%EA%B0%9C%EC%9A%94/" target="blank">회사소개</a></li>
+                <li><a href="#">이용약관</a></li>
+                <li><a href="#">개인정보취급방침</a></li>
+                <!-- <li><a href="#">이용안내</a></li> -->
+                <li><a href="http://eggtec.com/%EC%A0%9C%ED%92%88%EB%AC%B8%EC%9D%98/" target="blank">문의게시판</a></li>
+                <!--<li><a href="https://www.twayair.com/main.do?frontYn=Y">PC버전</a></li>-->
+            </ul>
+        </div>
+        <!-- E: Site Info -->
+        <p class="copyright" role="contentinfo"><small>Copyright &copy; EGG-Board.com. All Rights Reserved.</small></p>
+    </footer>
+    <!-- Footer -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApiDao">
+    <select id="selectFarm" resultType="String">
+        SELECT farm_no
+        FROM   tb_farm
+        WHERE  farm_no = '1'
+    </select>
+    
+    <select id="selectWorkSeq" resultType="Int">
+        SELECT IFNULL(MAX(work_seq), 0) + 1
+        FROM   tb_farm
+    </select>
+    
+    <insert id="ApiDao.insertBin" parameterType="Bin">
+        INSERT INTO tb_bin
+        (
+            work_seq
+          , serial_no
+          , bin_no
+          , current_weight
+          , used_weight
+          , add_weight
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{binNo}
+          , #{currentWeight}
+          , #{usedWeight}
+          , #{addWeight}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="ApiDao.insertEgg" parameterType="Egg">
+        INSERT INTO tb_egg
+        (
+            work_seq
+          , serial_no
+          , farm_no
+          , grade
+          , prod_ratio
+          , qntty
+          , box
+          , total_weight
+          , avrg_weight
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{farmNo}
+          , #{grade}
+          , #{prodRatio}
+          , #{qntty}
+          , #{box}
+          , #{totalWeight}
+          , #{avrgWeight}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="ApiDao.insertFan" parameterType="Fan">
+        INSERT INTO tb_fan
+        (
+            work_seq
+          , serial_no
+          , fan_no
+          , status
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{fanNo}
+          , #{status}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+
+    <insert id="ApiDao.insertFarm" parameterType="Farm">
+        INSERT INTO tb_farm
+        (
+            work_seq
+          , serial_no
+          , farm_no
+          , connection_status
+          , status
+          , input_count
+          , water_qntty
+          , type
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{farmNo}
+          , #{connectionStatus}
+          , #{status}
+          , #{inputCount}
+          , #{waterQntty}
+          , #{type}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="ApiDao.insertLight" parameterType="Light">
+        INSERT INTO tb_light
+        (
+            work_seq
+          , serial_no
+          , light_no
+          , lux
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{lightNo}
+          , #{lux}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="ApiDao.insertThermo" parameterType="Thermometer">
+        INSERT INTO tb_thermometer
+        (
+            work_seq
+          , serial_no
+          , thermometer_no
+          , degree
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{thermometerNo}
+          , #{degree}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="ApiDao.insertErrorCode" parameterType="ErrorCode">
+        INSERT INTO tb_error
+        (
+            work_seq
+          , serial_no
+          , type
+          , error_no
+          , error_code
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{workSeq}
+          , #{serialNo}
+          , #{type}
+          , #{errorNo}
+          , #{errorCode}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+
+</mapper>
+

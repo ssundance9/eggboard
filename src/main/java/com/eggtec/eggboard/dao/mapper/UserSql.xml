@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDao">
+    <select id="selectUserById" parameterType="String" resultType="User">
+        SELECT user_id 
+             , user_pw 
+             , user_name
+             , user_mphone
+             , user_mphone1 
+             , user_mphone2 
+             , user_mphone3 
+             , user_email 
+             , user_address1 
+             , user_address2 
+             , serial_no 
+             , farm_name 
+             , photo_info
+             , user_type
+             , confirm_dtm
+             , reg_dtm
+             , mod_dtm
+        FROM   tb_user
+        WHERE  user_id = #{userId}
+    </select>
+    
+    <select id="selectUserByEmail" parameterType="String" resultType="User">
+        SELECT user_id  userId
+        FROM   tb_user
+        WHERE  user_email = #{userEmail}
+    </select>
+    
+    <insert id="insertUser" parameterType="User">
+        INSERT INTO tb_user
+        (
+            user_id 
+          , user_pw 
+          , user_name
+          , user_mphone
+          , user_mphone1
+          , user_mphone2
+          , user_mphone3
+          , user_email
+          , user_address1
+          , user_address2
+          , serial_no
+          , farm_name
+          , photo_info
+          , user_type
+          , reg_dtm
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{userId}
+          , #{userPw}
+          , #{userName}
+          , #{userMphone}
+          , #{userMphone1}
+          , #{userMphone2}
+          , #{userMphone3}
+          , #{userEmail}
+          , #{userAddress1}
+          , #{userAddress2}
+          , #{serialNo}
+          , #{farmName}
+          , #{photoInfo}
+          , #{userType}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <insert id="insertHen" parameterType="Hen">
+        INSERT INTO tb_hen
+        (
+            user_id 
+          , farm_no 
+          , hen_count 
+          , ent_dt 
+          , reg_dtm 
+          , mod_dtm
+        )
+        VALUES
+        (
+            #{userId}
+          , #{farmNo}
+          , #{henCount}
+          , #{entDt}
+          , NOW()
+          , NOW()
+        )
+    </insert>
+    
+    <select id="selectUserList" parameterType="User" resultType="User">
+        SELECT user_id 
+             , user_pw 
+             , user_name 
+             , user_mphone1 
+             , user_mphone2 
+             , user_mphone3 
+             , user_email 
+             , user_address1 
+             , user_address2 
+             , serial_no 
+             , farm_name 
+             , photo_info
+             , user_type
+             , confirm_dtm
+             , reg_dtm
+             , mod_dtm
+        FROM   tb_user
+        WHERE  user_type = #{userType}
+        ORDER BY reg_dtm DESC
+    </select>
+    
+    <select id="selectUserListTotalCount" parameterType="User" resultType="User">
+        SELECT user_id 
+             , user_pw 
+             , user_name 
+             , user_mphone1 
+             , user_mphone2 
+             , user_mphone3 
+             , user_email 
+             , user_address1 
+             , user_address2 
+             , serial_no 
+             , farm_name 
+             , photo_info
+             , user_type
+             , confirm_dtm
+             , reg_dtm
+             , mod_dtm
+        FROM   tb_user
+        WHERE  user_type = #{userType}
+        ORDER BY reg_dtm DESC
+    </select>
+    
+    <!-- <select id="findWithPagination" parameterType="java.util.Map" resultType="net.muchine.test.mybatis.Post">
+        <![CDATA[ 
+            SELECT * 
+            FROM (
+            select ROW_NUMBER() OVER(ORDER BY ID DESC) AS NUM , * 
+            from TEST_PAGING
+            ) X 
+            WHERE NUM >= #{start} AND NUM < #{end}
+            order by NUM
+        ]]>
+    </select> -->
+    
+    <update id="updateUser" parameterType="User">
+        UPDATE tb_user
+        SET    user_name        = #{userName}
+             <!-- , user_pw          = #{userPw} -->
+             , user_mphone      = #{userMphone}
+             , user_mphone1     = #{userMphone1}
+             , user_mphone2     = #{userMphone2}
+             , user_mphone3     = #{userMphone3}
+             , user_email       = #{userEmail}
+             , user_address1    = #{userAddress1}
+             , user_address2    = #{userAddress2}
+             <!-- , serial_no        = #{serialNo} -->
+             , farm_name        = #{farmName}
+             , photo_info       = #{photoInfo}
+             , user_type        = #{userType}
+             <!-- , confirm_dtm      = #{confirmDtm} -->
+             , mod_dtm          = NOW()
+      WHERE user_id = #{userId}
+    </update>
+    
+    <delete id="deleteHenById" parameterType="String">
+        DELETE FROM tb_hen
+        WHERE  user_id = #{userId}
+    </delete>
+    
+    <update id="updateUserSerialNo" parameterType="User">
+        UPDATE tb_user
+        SET    serial_no = #{serialNo}
+             , confirm_dtm = NOW()
+        WHERE  user_id = #{userId}
+    </update>
+
+</mapper>
+

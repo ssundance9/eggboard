@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AdminDao">
+    <select id="selectFarm" parameterType="Farm" resultType="Farm">
+        SELECT work_seq             workSeq
+             , serial_no            serialNo
+             , farm_no              farmNo
+             , connection_status    connectionStatus
+             , status               status
+             , input_count          inputCount
+             , water_qntty          waterQntty
+             , error_code           errorCode
+             , type                 type
+             , reg_dtm              regDtm
+             , mod_dtm              modDtm
+        FROM   tb_farm
+        WHERE  serial_no = #{serialNo}
+        AND    farm_no   = #{farmNo}
+        AND    type      = #{type}
+        ORDER  BY work_seq DESC
+        LIMIT 1
+    </select>
+    
+    <select id="selectEggListByFarm" parameterType="Farm" resultType="Egg">
+        SELECT work_seq     workSeq
+             , serial_no    serialNo
+             , farm_no      farmNo
+             , grade        grade
+             , weight_range weightRange
+             , prod_ratio   prodRatio
+             , qntty        qntty
+             , box          box
+             , total_weight totalWeight
+             , avrg_weight  avrgWeight
+             , reg_dtm      regDtm
+             , mod_dtm      modDtm
+        FROM   tb_egg
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        AND    farm_no   = #{farmNo}
+        ORDER  BY grade
+    </select>
+    
+    <select id="selectBinListByFarm" parameterType="Farm" resultType="Bin">
+        SELECT work_seq         workSeq
+             , serial_no        serialNo
+             , bin_no           binNo
+             , current_weight   currentWeight
+             , used_weight      usedWeight
+             , add_weight       addWeight
+             , reg_dtm          regDtm
+             , mod_dtm          modDtm
+        FROM   tb_bin
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY bin_no
+    </select>
+    
+    <select id="selectFanListByFarm" parameterType="Farm" resultType="Fan">
+        SELECT work_seq     workSeq
+             , serial_no    serialNo
+             , fan_no       fanNo
+             , status       status
+             , reg_dtm      regDtm
+             , mod_dtm      modDtm
+        FROM   tb_fan
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY fan_no
+    </select>
+    
+    <select id="selectLightListByFarm" parameterType="Farm" resultType="Light">
+        SELECT work_seq     workSeq
+             , serial_no    serialNo
+             , light_no     lightNo
+             , lux          lux
+             , reg_dtm      regDtm
+             , mod_dtm      modDtm
+        FROM   tb_light
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY light_no
+    </select>
+    
+    <select id="selectThermoListByFarm" parameterType="Farm" resultType="Thermometer">
+        SELECT work_seq         workSeq
+             , serial_no        serialNo
+             , thermometer_no   thermometerNo
+             , degree           degree
+             , reg_dtm          regDtm
+             , mod_dtm          modDtm
+        FROM   tb_thermometer
+        WHERE  work_seq  = #{workSeq}
+        AND    serial_no = #{serialNo}
+        ORDER  BY thermometer_no
+    </select>
+
+</mapper>
+
