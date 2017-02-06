@@ -95,13 +95,15 @@
                 <div class="terms">
                     <div class="terms_agree">
                         <p class="title"><img src="/images/terms_title01.gif" alt="회원약관" /></p>
-                        <fieldset>
-                            <legend>회원동의</legend>
-                            <div class="check_style">
-                                <input type="checkbox" value="None" id="check_style" name="check_style" class="amir">
-                                <label for="check_style"><span><img src="/images/terms_agree.gif" alt="동의합니다" /></span></label>
-                            </div>
-                        </fieldset>
+                        <form method="post" action="">
+                            <fieldset>
+                                <legend>회원동의</legend>
+                                <div class="check_style">
+                                    <input type="checkbox" value="None" id="check_style" name="check_style" class="amir">
+                                    <label for="check_style"><span><img src="/images/terms_agree.gif" alt="동의합니다" /></span></label>
+                                </div>
+                            </fieldset>
+                        </form>
                     </div>
                     
                     <div class="terms_txt">

@@ -194,11 +194,54 @@
             var line2 = new Array();
             var label2 = new Array();
             <c:forEach var="w" items="${waterList}" varStatus="vs">
-                line2[${vs.index}] = "${w.waterQntty}";
-                label2[${vs.index}] = "${w.waterQntty}";
+                <fmt:formatDate var="hr" value="${water.regDtm}" pattern="HH"/>
+                <c:if test="${hr >= 0 && hr < 12}">
+                    line2[${vs.index}] = "${w.waterQntty}";
+                    label2[${vs.index}] = "${w.waterQntty}";
+                </c:if>
             </c:forEach>
         
-            var plot2 = $.jqplot('waterChart', [line2], {
+            var plot2 = $.jqplot('waterChart1', [line2], {
+                seriesDefaults: { 
+                    showMarker:true,
+                    pointLabels: {
+                        show:true,
+                        labels:label2
+                    }
+                },
+                axesDefaults: {
+                    showTicks: false,
+                    drawMajorGridlines: false,
+                    borderWidth: 0,
+                    rendererOptions: {
+                        drawBaseline: false
+                    }
+                },
+                axes: {
+                    xaxis: {
+                        pad: 1.1
+                    },
+                    yaxis: {
+                        max: 2000,
+                        min: 0
+                    }
+                },
+                grid: {
+                    shadow: false
+                }
+            });
+            
+            line2 = new Array();
+            label2 = new Array();
+            <c:forEach var="w" items="${waterList}" varStatus="vs">
+                <fmt:formatDate var="hr" value="${water.regDtm}" pattern="HH"/>
+                <c:if test="${hr >= 12 && hr < 24}">
+                    line2[${vs.index}] = "${w.waterQntty}";
+                    label2[${vs.index}] = "${w.waterQntty}";
+                </c:if>
+            </c:forEach>
+        
+            var plot2 = $.jqplot('waterChart2', [line2], {
                 seriesDefaults: { 
                     showMarker:true,
                     pointLabels: {
@@ -281,13 +324,7 @@
             });
         }
     }
-    
     </script>
-
- 
-
-
-
 </head>
 
 <body class="wrapper">
@@ -314,7 +351,7 @@
                             <span>통신</span>
                             <c:if test="${empty farm.connectionStatus}">
                                 <span>
-                                    <img src="/images_m/img_con_off.png" style="height: 100%;width: 100%;"/>
+                                    <img src="/images_m/img_con_off.png" style="height: 25px;width: 50px;"/>
                                 </span>
                             </c:if>
                             <c:if test="${farm.connectionStatus == '0'}">
@@ -329,7 +366,7 @@
                             <span>장비연결</span>
                             <c:if test="${empty farm.status}">
                                 <span>
-                                    <img src="/images_m/img_con_off.png" style="height: 100%;width: 100%;"/>
+                                    <img src="/images_m/img_con_off.png" style="height: 25px;width: 50px;"/>
                                 </span>
                             </c:if>
                             <c:if test="${farm.status == '0'}">
@@ -344,9 +381,17 @@
                     <div class="now_state">
                         <div class="state">
                             <span>현재 상태</span>
-                            <span class="gradient03">정상 동작중</span>
+                            <c:if test="${empty errorCode }">
+                                <span class="gradient01">정상 동작중</span>
+                            </c:if>
+                            <c:if test="${not empty errorCode }">
+                                <span class="gradient03">${errorCode }</span>
+                            </c:if>
                         </div>
-                        <span class="time">오전 12시 30분<i onclick="document.location.reload();"></i></span>
+                        <span class="time">
+                            <fmt:formatDate value="${today}" pattern="HH시 mm분"/>
+                            <i onclick="document.location.reload();"></i>
+                        </span>
                     </div>
                 </div>
                 <!-- E: link_state -->
@@ -525,7 +570,7 @@
                                 <div class="select_table">
                                     <ul>
                                         <li>
-                                            <span>계사 현황</span>
+                                            <span>계사 선택</span>
                                             <select id="selectFarmStatistics">
                                                 <c:forEach var="hen" items="${henList}">
                                                     <option value="${hen.farmNo}" <c:if test="${param.farmNo == hen.farmNo}">selected="selected"</c:if>>
@@ -573,156 +618,186 @@
                                     </div>
                                 </div>
                                 
-                                <div class="table_graph" style="height:auto;">
-                                    <ul class="graph_grade">
-                                        <li>등급</li>
-                                        <li>왕란</li>
-                                        <li>특란</li>
-                                        <li>대란</li>
-                                        <li>중란</li>
-                                        <li>소란</li>
-                                        <li>경란</li>
-                                        <li>오란</li>
-                                        <li>파란</li>
-                                        <li>등외</li>
-                                    </ul>
-                                    <div class="graph_scroll">
-                                        <div class="scroll_wrap">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <c:if test="${not empty list}">
-                                                            <c:forEach var="data" items="${list[0]}">
-                                                                <th>
-                                                                    <fmt:parseDate var="workDate" value="${data.workDate}" pattern="yyyyMMdd"/>
-                                                                    <fmt:formatDate value="${workDate}" pattern="MM-dd"/>
-                                                                </th>
-                                                            </c:forEach>
-                                                            <c:set var="thLength" value="${fn:length(list[0])}"/>
-                                                        </c:if>
-                                                        <c:if test="${empty list}">
-                                                            <th>
-                                                                <fmt:parseDate var="workDate" value="${fromDate}" pattern="yyyyMMdd"/>
-                                                                <fmt:formatDate value="${workDate}" pattern="MM-dd"/>
+                                <c:if test="${empty list}">
+                                    <div class="table_graph" style="height:auto;">
+                                        <ul class="graph_grade">
+                                            <li>등급</li>
+                                            <li></li>
+                                        </ul>
+                                        <div class="graph_scroll">
+                                            <div class="scroll_wrap">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th colspan="3">
+                                                                날짜를 선택해 주세요.
                                                             </th>
-                                                            <th>~</th>
-                                                            <th>
-                                                                <fmt:parseDate var="workDate" value="${toDate}" pattern="yyyyMMdd"/>
-                                                                <fmt:formatDate value="${workDate}" pattern="MM-dd"/>
-                                                            </th>
-                                                            <c:set var="thLength" value="3"/>
-                                                        </c:if>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- <tr>
-                                                        <td colspan="30">
-                                                            <div class="chart"></div>
-                                                        </td>
-                                                    </tr> -->
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart1" style="height:80px;">
-                                                                <c:if test="${empty list}">
-                                                                    <br/>
-                                                                    조회 데이터가 없습니다.
-                                                                </c:if>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart2" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran02">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart3" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran03">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart4" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart5" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart6" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart7" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart8" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="${thLength}">
-                                                            <div class="chart" id="chart9" style="height:80px;"></div>
-                                                        </td>
-                                                    </tr> 
-                                                    <tr class="ran ran01">
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                        <td><p>-</p>-</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td colspan="3">
+                                                                <div class="chart" id="chart1" style="height:80px;">
+                                                                    <c:if test="${empty list}">
+                                                                        <br/>
+                                                                        데이터가 없습니다.
+                                                                    </c:if>
+                                                                </div>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr class="ran ran01">
+                                                            <td colspan="5"><p>-</p>-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                    <c:if test="${thLength > 4}">
-                                        <span class="right_arrow"></span>
-                                    </c:if>
-                                </div>
+                                </c:if>
+                                <c:if test="${not empty list}">
+                                    <div class="table_graph" style="height:auto;">
+                                        <ul class="graph_grade">
+                                            <li>등급</li>
+                                            <li>왕란</li>
+                                            <li>특란</li>
+                                            <li>대란</li>
+                                            <li>중란</li>
+                                            <li>소란</li>
+                                            <li>경란</li>
+                                            <li>오란</li>
+                                            <li>파란</li>
+                                            <li>등외</li>
+                                        </ul>
+                                        <div class="graph_scroll">
+                                            <div class="scroll_wrap">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <c:if test="${not empty list}">
+                                                                <c:forEach var="data" items="${list[0]}">
+                                                                    <th>
+                                                                        <fmt:parseDate var="workDate" value="${data.workDate}" pattern="yyyyMMdd"/>
+                                                                        <fmt:formatDate value="${workDate}" pattern="MM-dd"/>
+                                                                    </th>
+                                                                </c:forEach>
+                                                                <c:set var="thLength" value="${fn:length(list[0])}"/>
+                                                            </c:if>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- <tr>
+                                                            <td colspan="30">
+                                                                <div class="chart"></div>
+                                                            </td>
+                                                        </tr> -->
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart1" style="height:80px;">
+                                                                    <c:if test="${empty list}">
+                                                                        <br/>
+                                                                        데이터가 없습니다.
+                                                                    </c:if>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart2" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran02">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart3" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran03">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart4" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart5" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart6" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart7" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart8" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="${thLength}">
+                                                                <div class="chart" id="chart9" style="height:80px;"></div>
+                                                            </td>
+                                                        </tr> 
+                                                        <tr class="ran ran01">
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                            <td><p>-</p>-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <c:if test="${thLength > 4}">
+                                            <span class="right_arrow"></span>
+                                        </c:if>
+                                    </div>
+                                </c:if>
                                 <span class="eggtec"><img src="/images_m/img_eggtec.gif" alt="eggtec" /></span>
                             </div>
                             <!-- E: tab_con02 -->
@@ -784,13 +859,39 @@
                                                 <ul>
                                                     <c:if test="${empty binList}">
                                                         <li>
-                                                            <img src="/images_m/img_6kg.gif" alt="images" />
+                                                            <img src="/images_m/img_bin_1_off.gif" alt="images" />
+                                                            <span class="left"><em>0</em>kg</span>
+                                                        </li>
+                                                        <li>
+                                                            <img src="/images_m/img_bin_2_off.gif" alt="images" />
+                                                            <span class="left"><em>0</em>kg</span>
+                                                        </li>
+                                                        <li>
+                                                            <img src="/images_m/img_bin_3_off.gif" alt="images" />
+                                                            <span class="left"><em>0</em>kg</span>
+                                                        </li>
+                                                        <li>
+                                                            <img src="/images_m/img_bin_4_off.gif" alt="images" />
+                                                            <span class="left"><em>0</em>kg</span>
+                                                        </li>
+                                                        <li>
+                                                            <img src="/images_m/img_bin_5_off.gif" alt="images" />
+                                                            <span class="left"><em>0</em>kg</span>
+                                                        </li>
+                                                        <li>
+                                                            <img src="/images_m/img_bin_6_off.gif" alt="images" />
                                                             <span class="left"><em>0</em>kg</span>
                                                         </li>
                                                     </c:if>
                                                     <c:forEach var="bin" items="${binList}">
                                                         <li>
-                                                            <img src="/images_m/img_kg.gif" alt="images" />
+                                                            <c:if test="${bin.currentWeight != -1 }">
+                                                                <c:set var="on_off" value="on" />
+                                                            </c:if>
+                                                            <c:if test="${bin.currentWeight == -1 }">
+                                                                <c:set var="on_off" value="off" />
+                                                            </c:if>
+                                                            <img src="/images_m/img_bin_${bin.binNo }_${on_off }.jpg" alt="images" />
                                                             <span class="left">
                                                                 <em>${bin.currentWeight}</em>&nbsp;kg
                                                             </span>
@@ -869,12 +970,61 @@
                                             <div class="data before" id="beforeSearchWater">
                                                 <table>
                                                     <c:if test="${empty waterList}">
-                                                        <td>-</td>
+                                                        <tr>
+                                                            <td>00</td>
+                                                            <td>01</td>
+                                                            <td>02</td>
+                                                            <td>03</td>
+                                                            <td>04</td>
+                                                            <td>05</td>
+                                                            <td>06</td>
+                                                            <td>07</td>
+                                                            <td>08</td>
+                                                            <td>09</td>
+                                                            <td>10</td>
+                                                            <td>11</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="12">
+                                                                <div style="height: 150px;">
+                                                                    <br/>
+                                                                    데이터가 없습니다.
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>12</td>
+                                                            <td>13</td>
+                                                            <td>14</td>
+                                                            <td>15</td>
+                                                            <td>16</td>
+                                                            <td>17</td>
+                                                            <td>18</td>
+                                                            <td>19</td>
+                                                            <td>20</td>
+                                                            <td>21</td>
+                                                            <td>22</td>
+                                                            <td>23</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="12">
+                                                                <div style="height: 150px;">
+                                                                    <br/>
+                                                                    데이터가 없습니다.
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     </c:if>
-                                                    <c:forEach var="water" items="${waterList}">
-                                                        <td>
-                                                            <fmt:formatDate value="${water.regDtm}" pattern="HH"/>
-                                                        </td>
+                                                    <c:forEach var="water" items="${waterList}" varStatus="vs1">
+                                                        <fmt:formatDate var="hr" value="${water.regDtm}" pattern="HH"/>
+                                                        <c:if test="${hr >= 0 && hr < 12}">
+                                                            <tr>
+                                                                <td>
+                                                                    ${hr }
+                                                                </td>
+                                                            </tr>
+                                                            <c:set var="vsCnt1" value="${vs1 + 1 }"/>
+                                                        </c:if>
                                                     </c:forEach>
                                                     <!-- <tr>
                                                         <td>1</td>
@@ -893,11 +1043,14 @@
                                                         <td>14</td>
                                                         <td>16</td>
                                                     </tr> -->
-                                                    <tr class="graph_td">
-                                                        <td colspan="${fn:length(waterList)}">
-                                                            <div id="waterChart" style="height: 150px;"></div>
-                                                        </td>
-                                                    </tr>
+                                                    <c:if test="${not empty waterList }">
+                                                        <tr class="graph_td">
+                                                            <td colspan="${vsCnt1 }">
+                                                                <div id="waterChart1" style="height: 150px;"></div>
+                                                            </td>
+                                                        </tr>
+                                                    </c:if>
+                                                    
                                                     <!-- <tr>
                                                         <td>1</td>
                                                         <td>2</td>
@@ -920,6 +1073,24 @@
                                                             <td colspan="16">1</td>
                                                         </tr>
                                                     </tr> -->
+                                                    <c:forEach var="water" items="${waterList}" varStatus="vs2">
+                                                        <fmt:formatDate var="hr" value="${water.regDtm}" pattern="HH"/>
+                                                        <c:if test="${hr >= 12 && hr < 24}">
+                                                            <tr>
+                                                                <td>
+                                                                    ${hr }
+                                                                </td>
+                                                            </tr>
+                                                            <c:set var="vsCnt2" value="${vs2 + 1 }"/>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <c:if test="${not empty waterList }">
+                                                        <tr class="graph_td">
+                                                            <td colspan="${vsCnt2}">
+                                                                <div id="waterChart2" style="height: 150px;"></div>
+                                                            </td>
+                                                        </tr>
+                                                    </c:if>
                                                 </table>
                                             </div>
                                             <!-- E: 조회전 -->
@@ -971,11 +1142,29 @@
                                             <span class="title"><span class="title_txt">계사<br>시설</span></span>
                                             <div class="facility_info">
                                                 <span class="img"><img src="/images_m/img_facility.gif" alt="imags" /></span>
-                                                <table class="temp">
+                                                <table class="temp" style="width: 50%;float: left;">
                                                     <tbody>
+                                                        <c:if test="${empty thermoList }">
+                                                            <tr>
+                                                                <th>T1</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>T2</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>T3</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>T4</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                        </c:if>
                                                         <c:forEach var="thermo" items="${thermoList}">
                                                             <tr>
-                                                                <th>온도${thermo.thermometerNo}</th>
+                                                                <th>T${thermo.thermometerNo}</th>
                                                                 <td>${thermo.degree}°C</td>
                                                             </tr>
                                                         </c:forEach>
@@ -987,8 +1176,26 @@
                                                         </tr> -->
                                                     </tbody>
                                                 </table>
-                                                <table class="temp">
+                                                <table class="temp" style="width: 50%;float: right;">
                                                     <tbody>
+                                                        <c:if test="${empty lightList }">
+                                                            <tr>
+                                                                <th>조도1</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>조도2</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>조도3</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>조도4</th>
+                                                                <td>N/A</td>
+                                                            </tr>
+                                                        </c:if>
                                                         <c:forEach var="light" items="${lightList}">
                                                             <tr>
                                                                 <th>조도${light.lightNo}</th>
@@ -1005,36 +1212,53 @@
                                                 </table>
                                                 <table class="fan">
                                                     <tbody>
-                                                        <tr>
-                                                            <c:forEach var="fan" items="${fanList}" varStatus="fVs">
-                                                                <c:if test="${fVs.index >= 0 && fVs.index < 4}">
-                                                                    <c:if test="${fan.status == '2' }">
-                                                                        <td>FAN-${fan.fanNo} ERR</td>
+                                                        <c:if test="${empty fanList }">
+                                                            <tr>
+                                                                <td>FAN-1 OFF</td>
+                                                                <td>FAN-2 OFF</td>
+                                                                <td>FAN-3 OFF</td>
+                                                                <td>FAN-4 OFF</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>FAN-5 OFF</td>
+                                                                <td>FAN-6 OFF</td>
+                                                                <td>FAN-7 OFF</td>
+                                                                <td>FAN-8 OFF</td>
+                                                            </tr>
+                                                        </c:if>
+                                                        <c:if test="${not empty fanList }">
+                                                            <tr>
+                                                                <c:forEach var="fan" items="${fanList}" varStatus="fVs">
+                                                                    <c:if test="${fVs.index >= 0 && fVs.index < 4}">
+                                                                        <c:if test="${fan.status == '2' }">
+                                                                            <td>FAN-${fan.fanNo} ERR</td>
+                                                                        </c:if>
+                                                                        <c:if test="${fan.status == '1' }">
+                                                                            <td class="on">FAN-${fan.fanNo} ON</td>
+                                                                        </c:if>
+                                                                        <c:if test="${fan.status == '0' }">
+                                                                            <td>FAN-${fan.fanNo} OFF</td>
+                                                                        </c:if>
                                                                     </c:if>
-                                                                    <c:if test="${fan.status == '1' }">
-                                                                        <td class="on">FAN-${fan.fanNo} ON</td>
+                                                                </c:forEach>
+                                                            </tr>
+                                                            <tr>
+                                                                <c:forEach var="fan" items="${fanList}" varStatus="fVs">
+                                                                    <c:if test="${fVs.index >= 4}">
+                                                                        <c:if test="${fan.status == '2' }">
+                                                                            <td>FAN-${fan.fanNo} ERR</td>
+                                                                        </c:if>
+                                                                        <c:if test="${fan.status == '1' }">
+                                                                            <td class="on">FAN-${fan.fanNo} ON</td>
+                                                                        </c:if>
+                                                                        <c:if test="${fan.status == '0' }">
+                                                                            <td>FAN-${fan.fanNo} OFF</td>
+                                                                        </c:if>
                                                                     </c:if>
-                                                                    <c:if test="${fan.status == '0' }">
-                                                                        <td>FAN-${fan.fanNo} OFF</td>
-                                                                    </c:if>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </tr>
-                                                        <tr>
-                                                            <c:forEach var="fan" items="${fanList}" varStatus="fVs">
-                                                                <c:if test="${fVs.index >= 4}">
-                                                                    <c:if test="${fan.status == '2' }">
-                                                                        <td>FAN-${fan.fanNo} ERR</td>
-                                                                    </c:if>
-                                                                    <c:if test="${fan.status == '1' }">
-                                                                        <td class="on">FAN-${fan.fanNo} ON</td>
-                                                                    </c:if>
-                                                                    <c:if test="${fan.status == '0' }">
-                                                                        <td>FAN-${fan.fanNo} OFF</td>
-                                                                    </c:if>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </tr>
+                                                                </c:forEach>
+                                                            </tr>
+                                                        </c:if>
+                                                        
                                                         <!-- <tr>
                                                             <td class="on">FAN-1 ON</td>
                                                             <td>FAN-1 OFF</td>
@@ -1099,7 +1323,7 @@
             <div class="today">
                 <p>
                     <fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/>
-                </>
+                </p>
                 <p>
                     <fmt:formatDate value="${today}" pattern="E"/>요일
                 </p>
@@ -1107,13 +1331,13 @@
             <div class="login_info">
                 <p>
                     <c:if test="${empty user.photoInfo}">
-                        <img src="/images_m/img_farm.gif" width="100%" height="auto" alt="농장이름" />
+                        <img src="/images_m/farm_default.jpg" width="100%" height="auto" alt="농장이름" />
                     </c:if>
                     <c:if test="${not empty user.photoInfo}">
                         <img src="${user.photoInfo }" width="100%" height="auto" alt="농장이름" />
                     </c:if>
-                    <span>${user.farmName}</span>
                 </p>
+                <p>${user.farmName}</p>
                 <p><a href="/logout.do">로그아웃</a></p>
                 <p><a href="/frt/mypageView.do">정보수정</a></p>
             </div>

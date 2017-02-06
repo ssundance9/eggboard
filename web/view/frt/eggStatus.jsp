@@ -216,7 +216,6 @@
             });
         </c:if>
         
-
         <c:if test="${not empty henList}">
             var line3 = new Array();
             var ticks3 = new Array();
@@ -317,6 +316,19 @@
             });
         }
     }
+    
+    function printPopup() {
+        <c:if test="${fn:contains(uri, 'eggStatus')}">
+            var farmNo = $("#selectFarmStatus").val();
+            window.open("/frt/printPopupEggStatus.do?farmNo=" + farmNo, "", "width=1040,height=500");
+        </c:if>
+        <c:if test="${fn:contains(uri, 'eggStatistics')}">
+            var farmNo = $("#selectFarmStatistics").val();
+            var fromDate = $("#fromDate").val();
+            var toDate = $("#toDate").val();
+            window.open("/frt/printPopupEggStatistics.do?farmNo=" + farmNo + "&fromDate=" + fromDate + "&toDate=" + toDate, "", "width=1040,height=500");
+        </c:if>
+    }
     </script>
 </head>
 <body>
@@ -340,7 +352,7 @@
                 <div class="today">
                     <p>
                         <fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/>
-                    </>
+                    </p>
                     <p>
                         <fmt:formatDate value="${today}" pattern="E"/>요일
                     </p>
@@ -348,7 +360,7 @@
                 <div class="login_info">
                     <p>
                         <c:if test="${empty user.photoInfo}">
-                            <img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" />
+                            <img src="/images/farm_default.jpg" width="100%" height="auto" alt="농장이름" />
                         </c:if>
                         <c:if test="${not empty user.photoInfo}">
                             <img src="${user.photoInfo }" width="100%" height="auto" alt="농장이름" />
@@ -394,7 +406,10 @@
                 <div class="now_state">
                     <p>
                         <c:if test="${empty errorCode }">
-                            <span class="gradient03">정상 동작중</span>
+                            <span class="gradient01">정상 동작중</span>
+                        </c:if>
+                        <c:if test="${not empty errorCode }">
+                            <span class="gradient03">${errorCode }</span>
                         </c:if>
                     </p>
                     <p class="time">
@@ -456,8 +471,13 @@
                     </div>
                     
                     <div class="tab_wrap">
-                        <span class="btn small"><a href=""><i></i>인쇄</a></span>
-                        
+                        <c:if test="${!fn:contains(uri, 'farmStatus')}">
+                            <span class="btn small">
+                                <a href="javascript://" onclick="printPopup();">
+                                    <i></i>인쇄
+                                </a>
+                            </span>
+                        </c:if>
                         <!-- S: tab manu -->
                         <ul class="tab">
                             <li><a href="/frt/eggStatus.do?farmNo=1" class="tab_list01 active"><img src="/images/tab_list01_on.gif" alt="선별현황" /></a></li>
@@ -795,9 +815,6 @@
                                                     </li>
                                                 </c:if>
                                                 <c:forEach var="bin" items="${binList}" varStatus="vs">
-                                                    
-                                                
-                                                
                                                     <li>
                                                         <c:if test="${bin.binNo == 1 && bin.currentWeight != -1}">
                                                             <img src="/images/img_bin_1_on.jpg" alt="images" />

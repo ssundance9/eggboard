@@ -96,7 +96,7 @@ public class FrontController extends BaseController {
         param.setFarmNo(farmNo);
         param.setType(Constants.DataTypeEgg);
         
-        // 날짜없으면 데이터 조회X.... 귀찮아서 노출만 안함
+        // 날짜없으면 데이터 조회X 하려했지만 계사정보는 있어야해서 통계정보 노출만 안함
         if (StringUtils.isEmpty(fromDate) || StringUtils.isEmpty(toDate)) {
             //fromDate = this.getFromDate(-2);
             fromDate = this.getToDate();
@@ -291,6 +291,67 @@ public class FrontController extends BaseController {
         super.getSession().setAttribute("user", member);
         
         return "redirect:/frt/mypageView.do";
+    }
+    
+    @SuppressWarnings("unchecked")
+    @RequestMapping("/frt/printPopupEggStatus.do")
+    public String printPopupEggStatus(Model model, Integer farmNo) {
+        User user = super.getUser();
+        
+        if (farmNo == null) {
+            farmNo = 1;
+        }
+        
+        Farm param = new Farm();
+        param.setSerialNo(user.getSerialNo());
+        param.setFarmNo(farmNo);
+        param.setType(Constants.DataTypeEgg);
+        
+        Map<String, Object> resultMap = frontService.getEggStatus(param, user.getUserId());
+        List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
+        
+        model.addAttribute("eggList", eggList);
+        model.addAttribute("today", new Date());
+        
+        return "/frt/printPopupEggStatus";
+    }
+    
+    @SuppressWarnings("unchecked")
+    @RequestMapping("/frt/printPopupEggStatistics.do")
+    public String printPopupEggStatistics(Model model, Integer farmNo, String fromDate, String toDate) {
+        User user = super.getUser();
+        
+        if (farmNo == null) {
+            farmNo = 1;
+        }
+        
+        Farm param = new Farm();
+        param.setSerialNo(user.getSerialNo());
+        param.setFarmNo(farmNo);
+        param.setType(Constants.DataTypeEgg);
+        
+        // 날짜없으면 데이터 조회X
+        if (StringUtils.isEmpty(fromDate) || StringUtils.isEmpty(toDate)) {
+            //fromDate = this.getFromDate(-2);
+            fromDate = this.getToDate();
+            toDate = this.getToDate();
+        } else {
+            fromDate = StringUtils.remove(fromDate, Constants.dateSeparator);
+            toDate = StringUtils.remove(toDate, Constants.dateSeparator);
+            
+            Map<String, Object> resultMap = frontService.eggStatistics(param, user.getUserId(), fromDate, toDate);
+            List<List<Egg>> list = (List<List<Egg>>) resultMap.get("statisticsInfo");
+            //Double maxVal = (Double) resultMap.get("maxVal");
+            
+            model.addAttribute("list", list);
+            //model.addAttribute("maxVal", maxVal);
+        }
+        
+        model.addAttribute("today", new Date());
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
+        
+        return "/frt/printPopupEggStatistics";
     }
 
 }
