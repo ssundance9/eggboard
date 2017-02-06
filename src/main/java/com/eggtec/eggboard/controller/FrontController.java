@@ -50,18 +50,19 @@ public class FrontController extends BaseController {
     
     @SuppressWarnings("unchecked")
     @RequestMapping("/frt/eggStatus.do")
-    public String eggStatus(Model model, Integer farmNo) {
+    public String eggStatus(Model model) {
         model.addAttribute("uri", super.getRequest().getRequestURI());
         
         User user = super.getUser();
         
-        if (farmNo == null) {
+        // 최근 데이터를 보여줌
+        /*if (farmNo == null) {
             farmNo = 1;
-        }
+        }*/
         
         Farm param = new Farm();
         param.setSerialNo(user.getSerialNo());
-        param.setFarmNo(farmNo);
+        //param.setFarmNo(farmNo);
         param.setType(Constants.DataTypeEgg);
         
         Map<String, Object> resultMap = frontService.getEggStatus(param, user.getUserId());
@@ -295,21 +296,19 @@ public class FrontController extends BaseController {
     
     @SuppressWarnings("unchecked")
     @RequestMapping("/frt/printPopupEggStatus.do")
-    public String printPopupEggStatus(Model model, Integer farmNo) {
+    public String printPopupEggStatus(Model model) {
         User user = super.getUser();
-        
-        if (farmNo == null) {
-            farmNo = 1;
-        }
         
         Farm param = new Farm();
         param.setSerialNo(user.getSerialNo());
-        param.setFarmNo(farmNo);
+        //param.setFarmNo(farmNo);
         param.setType(Constants.DataTypeEgg);
         
         Map<String, Object> resultMap = frontService.getEggStatus(param, user.getUserId());
+        Farm farm = (Farm) resultMap.get("farmInfo");
         List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
         
+        model.addAttribute("farm", farm);
         model.addAttribute("eggList", eggList);
         model.addAttribute("today", new Date());
         
@@ -320,6 +319,7 @@ public class FrontController extends BaseController {
     @RequestMapping("/frt/printPopupEggStatistics.do")
     public String printPopupEggStatistics(Model model, Integer farmNo, String fromDate, String toDate) {
         User user = super.getUser();
+        Farm farm = null;
         
         if (farmNo == null) {
             farmNo = 1;
@@ -340,6 +340,7 @@ public class FrontController extends BaseController {
             toDate = StringUtils.remove(toDate, Constants.dateSeparator);
             
             Map<String, Object> resultMap = frontService.eggStatistics(param, user.getUserId(), fromDate, toDate);
+            farm = (Farm) resultMap.get("farmInfo");
             List<List<Egg>> list = (List<List<Egg>>) resultMap.get("statisticsInfo");
             //Double maxVal = (Double) resultMap.get("maxVal");
             
@@ -347,6 +348,7 @@ public class FrontController extends BaseController {
             //model.addAttribute("maxVal", maxVal);
         }
         
+        model.addAttribute("farm", farm);
         model.addAttribute("today", new Date());
         model.addAttribute("fromDate", fromDate);
         model.addAttribute("toDate", toDate);

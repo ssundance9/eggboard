@@ -51,6 +51,8 @@
         <c:if test="${not empty errorMsg}">
            alert("${errorMsg}");
         </c:if>
+        
+        $("#user_id").focus();
     });
     
     function login() {

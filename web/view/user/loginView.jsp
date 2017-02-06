@@ -43,6 +43,14 @@
             alert("${errorMsg}");
         </c:if>
         
+        $("#user_id").focus();
+        
+        $("#user_pw").on("keydown", function(e) {
+            if (e.which == 13) {/* 13 == enter key@ascii */
+                login();
+            }
+        });
+        
     });
     
     function login() {

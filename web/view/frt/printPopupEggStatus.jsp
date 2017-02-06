@@ -40,7 +40,7 @@
                     <div class="tab_wrap">
                         <div style="margin-top: 20px; margin-left: 50px;">
                             <img src="/images/tab_list01_on.gif" alt="선별현황" />
-                            &nbsp;&nbsp;&nbsp;<fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/>
+                            &nbsp;&nbsp;&nbsp;<fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/> ${farm.farmNo }번 계사
                         </div>
                         <span class="btn small">
                             <a href="javascript://" onclick="window.print();">

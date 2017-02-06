@@ -125,9 +125,9 @@
             //jQuery(".scroll_wrap table tbody td").attr("colspan", thLength);
         //}
         
-        $("#selectFarmStatus").change(function() {
+        /* $("#selectFarmStatus").change(function() {
             document.location.href = "/frt/eggStatus.do?farmNo=" + $(this).val();
-        });
+        }); */
         
         $("#selectFarmStatistics").change(function() {
             document.location.href = "/frt/eggStatistics.do?farmNo=" + $(this).val();
@@ -319,8 +319,8 @@
     
     function printPopup() {
         <c:if test="${fn:contains(uri, 'eggStatus')}">
-            var farmNo = $("#selectFarmStatus").val();
-            window.open("/frt/printPopupEggStatus.do?farmNo=" + farmNo, "", "width=1040,height=500");
+            //var farmNo = $("#selectFarmStatus").val();
+            window.open("/frt/printPopupEggStatus.do", "", "width=1040,height=500");
         </c:if>
         <c:if test="${fn:contains(uri, 'eggStatistics')}">
             var farmNo = $("#selectFarmStatistics").val();
@@ -405,21 +405,38 @@
                 </div>
                 <div class="now_state">
                     <p>
-                        <c:if test="${empty errorCode }">
-                            <span class="gradient01">정상 동작중</span>
-                        </c:if>
-                        <c:if test="${not empty errorCode }">
-                            <span class="gradient03">${errorCode }</span>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${empty farm.connectionStatus && empty farm.status && empty errorCode }">
+                                <span class="gradient03">-</span>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${empty errorCode }">
+                                    <span class="gradient01">정상 동작중</span>
+                                </c:if>
+                                <c:if test="${not empty errorCode }">
+                                    <span class="gradient03">에러</span>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
                     <p class="time">
                         <fmt:formatDate value="${today}" pattern="HH시 mm분"/>
                     </p>
                     <p>현재 상태는
                         <br/>
-                        <c:if test="${empty errorCode }">
-                            정상 동작중입니다.
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${empty farm.connectionStatus && empty farm.status && empty errorCode }">
+                                -
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${empty errorCode }">
+                                    정상 동작중입니다.
+                                </c:if>
+                                <c:if test="${not empty errorCode }">
+                                    ${errorCode }
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
                     <p class="refresh"><a href="javascript://" onclick="document.location.reload();">새로고침<i></i></a></p>
                 </div>
@@ -471,7 +488,14 @@
                     </div>
                     
                     <div class="tab_wrap">
-                        <c:if test="${!fn:contains(uri, 'farmStatus')}">
+                        <c:if test="${fn:contains(uri, 'eggStatus') && not empty eggList}">
+                            <span class="btn small">
+                                <a href="javascript://" onclick="printPopup();">
+                                    <i></i>인쇄
+                                </a>
+                            </span>
+                        </c:if>
+                        <c:if test="${fn:contains(uri, 'eggStatistics') && not empty list}">
                             <span class="btn small">
                                 <a href="javascript://" onclick="printPopup();">
                                     <i></i>인쇄
@@ -480,7 +504,7 @@
                         </c:if>
                         <!-- S: tab manu -->
                         <ul class="tab">
-                            <li><a href="/frt/eggStatus.do?farmNo=1" class="tab_list01 active"><img src="/images/tab_list01_on.gif" alt="선별현황" /></a></li>
+                            <li><a href="/frt/eggStatus.do" class="tab_list01 active"><img src="/images/tab_list01_on.gif" alt="선별현황" /></a></li>
                             <li><a href="/frt/eggStatistics.do?farmNo=1" class="tab_list02"><img src="/images/tab_list02_off.gif" alt="선별통계" /></a></li>
                             <li><a href="/frt/farmStatus.do?farmNo=1" class="tab_list03"><img src="/images/tab_list03_off.gif" alt="시설현황" /></a></li>
                             <li><a href="javascript://" class="tab_list04" onclick="alert('서비스 준비중 입니다.');">
@@ -496,13 +520,17 @@
                                 <ul>
                                     <li>
                                         <span><img src="/images/select_table_txt01.gif" alt="현재 작업 계사" /></span>
-                                        <select id="selectFarmStatus">
+                                        <c:if test="${not empty eggList }">
+                                            계사 #${farm.farmNo }
+                                        </c:if>
+                                        
+                                        <%-- <select id="selectFarmStatus">
                                             <c:forEach var="hen" items="${henList}">
                                                 <option value="${hen.farmNo}" <c:if test="${param.farmNo == hen.farmNo}">selected="selected"</c:if>>
                                                     계사 #${hen.farmNo}
                                                 </option>
                                             </c:forEach>
-                                        </select>
+                                        </select> --%>
                                     </li>
                                     <li>
                                         <span><img src="/images/select_table_txt02.gif" alt="산란계수" /></span>

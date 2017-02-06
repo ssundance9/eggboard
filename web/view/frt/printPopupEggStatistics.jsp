@@ -39,7 +39,8 @@
                 <div>
                     <div class="tab_wrap">
                         <div style="margin-top: 20px; margin-left: 50px;">
-                            <img src="/images/tab_list02_on.gif" alt="선별현황" />
+                            <img src="/images/tab_list02_on.gif" alt="선별통계" />
+                            &nbsp;&nbsp;&nbsp;${farm.farmNo }번 계사
                         </div>
                         <span class="btn small">
                             <a href="javascript://" onclick="window.print();">
