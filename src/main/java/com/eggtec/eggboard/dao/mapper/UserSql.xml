@@ -95,6 +95,7 @@
         SELECT user_id 
              , user_pw 
              , user_name 
+             , user_mphone
              , user_mphone1 
              , user_mphone2 
              , user_mphone3 
@@ -109,7 +110,21 @@
              , reg_dtm
              , mod_dtm
         FROM   tb_user
-        WHERE  user_type = #{userType}
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="userName != null">
+                AND user_name = #{userName}
+            </if>
+            <if test="userMphone != null">
+                AND user_mphone = #{userMphone}
+            </if>
+            <if test="userType != null">
+                AND user_type = #{userType}
+            </if>
+        </where>
+        
         ORDER BY reg_dtm DESC
     </select>
     

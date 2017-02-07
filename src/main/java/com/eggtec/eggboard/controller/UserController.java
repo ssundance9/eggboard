@@ -6,8 +6,10 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -252,6 +254,70 @@ public class UserController extends BaseController {
         session.invalidate();
         
         return "redirect:/user/loginView.do";
+    }
+    
+    @RequestMapping("/user/searchId.do")
+    public View searchId(Model model, String userName, String userMphone) {
+        boolean result = false;
+        String id = null;
+        
+        if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(userMphone)) {
+            User param = new User();
+            param.setUserName(userName);
+            param.setUserMphone(userMphone);
+            List<User> userList = userService.getUserList(param);
+            
+            if (userList == null || userList.isEmpty()) {
+                result = false;
+            } else {
+                List<String> idList = new ArrayList<String>();
+                
+                for (User u : userList) {
+                    id = StringUtils.substring(u.getUserId(), 0, u.getUserId().length() - 2);
+                    id = id + "**";
+                    
+                    idList.add(id);
+                }
+                
+                result = true;
+                model.addAttribute("idList", idList);
+            }
+        } else {
+            result = false;
+        }
+        
+        model.addAttribute("result", result);
+        
+        return new MappingJackson2JsonView();
+    }
+    
+    @RequestMapping("/user/searchPw.do")
+    public View searchPw(Model model, String userId, String userName, String userMphone) {
+        boolean result = false;
+        
+        if (StringUtils.isNotEmpty(userId)
+                && StringUtils.isNotEmpty(userName)
+                && StringUtils.isNotEmpty(userMphone)) {
+            User param = new User();
+            param.setUserId(userId);
+            param.setUserName(userName);
+            param.setUserMphone(userMphone);
+            List<User> userList = userService.getUserList(param);
+            
+            if (userList == null || userList.isEmpty()) {
+                result = false;
+            } else {
+                result = true;
+                User user = userList.get(0);
+                model.addAttribute("userPw", user.getUserPw());
+            }
+        } else {
+            result = false;
+        }
+        
+        model.addAttribute("result", result);
+        
+        return new MappingJackson2JsonView();
     }
     
 }

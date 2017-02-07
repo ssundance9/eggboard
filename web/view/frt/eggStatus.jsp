@@ -59,9 +59,12 @@
             var today = new Date();
             var tYear = today.getFullYear();
             var tMonth = today.getMonth()+1 + "";
-            var tDay = today.getDate();
+            var tDay = today.getDate() + "";
             if (tMonth.length < 2) {
                 tMonth = "0" + tMonth;
+            }
+            if (tDay.length < 2) {
+                tDay = "0" + tDay;
             }
                         
             if (val == "3") {
@@ -82,12 +85,16 @@
             
             var p = $("#fromDate").datepicker("getDate");
             var month = (p.getMonth() + 1) + "";
+            var dat = p.getDate() + "";
             if (month.length < 2) {
                 month = "0" + month;
             }
+            if (dat.length < 2) {
+                dat = "0" + dat;
+            }
             
-            $("input#fromDate").val(p.getFullYear() + "-" + month + "-" + p.getDate());
-            $("input#fromDateFarm").val(p.getFullYear() + "-" + month + "-" + p.getDate());
+            $("input#fromDate").val(p.getFullYear() + "-" + month + "-" + dat);
+            $("input#fromDateFarm").val(p.getFullYear() + "-" + month + "-" + dat);
             $("input#toDate").val(tYear + "-" + tMonth + "-" + tDay);
             $("input#toDateFarm").val(tYear + "-" + tMonth + "-" + tDay);
         });

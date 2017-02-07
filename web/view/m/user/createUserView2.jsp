@@ -223,7 +223,7 @@ $(".entDt").datepicker();
             return false;
         }
 
-        if (id.length > 12) {
+        if (id.length < 4 || id.length > 12) {
             return false;
         }
         

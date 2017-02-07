@@ -75,6 +75,7 @@ public class EggServiceImpl implements EggService {
             e.setFromDate(fromDate);
             e.setToDate(toDate);
             
+            
             List<Egg> eggList = eggDao.selectEggListByEgg(e);
             if (!eggList.isEmpty()) {
                 maxValList.add(this.getMaxValue(eggList));

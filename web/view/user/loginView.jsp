@@ -12,6 +12,8 @@
     <link type="text/css" rel="stylesheet" href="/css/global.css" />    
     <link type="text/css" rel="stylesheet" href="/css/style_pc.css" />
     <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/common.js"></script>
     <script type="text/javascript">
     jQuery(document).ready(function(){
         
@@ -55,6 +57,71 @@
     
     function login() {
         $("form[name='loginForm']").submit();
+    }
+    
+    function searchId() {
+        var form = $("form[name='searchIdForm']");
+        
+        if (!validateParam(form.find("input[name='userName']"), "이름을 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userMphone']"), "휴대전화를 입력해 주세요.")) {
+            return false;
+        }
+        
+        var userName = form.find("input[name='userName']").val();
+        var userMphone = form.find("input[name='userMphone']").val();
+        
+        $.ajax({
+            url: "/user/searchId.do",
+            data: {userName: userName, userMphone: userMphone},
+            success: function (data) {
+                if (data.result) {
+                    var idStr = "";
+                    for (var i = 0; i < data.idList.length; i++) {
+                        if (i == 0) {
+                            idStr = data.idList[i];
+                        } else {
+                            idStr = idStr + ", " + data.idList[i];
+                        }
+                    }
+                    
+                    alert("조회하신 아이디는 '" + idStr + "' 입니다.");
+                } else {
+                    alert("입력하신 정보와 일치하는 회원이 존재하지 않습니다.");
+                }
+            }
+        });
+    }
+    
+    function searchPw() {
+        var form = $("form[name='searchPwForm']");
+        
+        if (!validateParam(form.find("input[name='userId']"), "아이디를 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userName']"), "이름을 입력해 주세요.")) {
+            return false;
+        }
+        if (!validateParam(form.find("input[name='userMphone']"), "휴대전화를 입력해 주세요.")) {
+            return false;
+        }
+        
+        var userId = form.find("input[name='userId']").val();
+        var userName = form.find("input[name='userName']").val();
+        var userMphone = form.find("input[name='userMphone']").val();
+        
+        $.ajax({
+            url: "/user/searchPw.do",
+            data: {userId: userId, userName: userName, userMphone: userMphone},
+            success: function (data) {
+                if (data.result) {
+                    alert("조회하신 비밀번호는 '" + data.userPw + "' 입니다.");
+                } else {
+                    alert("입력하신 정보와 일치하는 회원이 존재하지 않습니다.");
+                }
+            }
+        });
     }
     </script>
 </head>
@@ -144,63 +211,70 @@
                         <li><a href="#" class="active">아이디 찾기</a></li>
                         <li><a href="#">비밀번호 찾기</a></li>
                     </ul>
-        
-                    <div class="tab_con tab_con01">
-                        <ul class="info_table">
-                            
-                            <li>
-                                <span class="th">이름</span>
-                                <div>
-                                    <input type="text" id="mbName" class="" name="mbName" placeholder="" >
-                                </div>
-                            </li>
-                            <li>
-                                <span class="th">휴대전화</span>
-                                <div class="phone_area">
-                                    <input type="tel" id="phoneNo" class="" name="phoneNo" maxlength="" placeholder="'-'제외하고 숫자만 입력" >             
-                                </div>
-                            </li>
-                        </ul>
-                        <span class="btn_big check"><a href="/"><img src="/images/btn_join_complete.gif" alt="확인" /></a></span>
-                    </div>
-                   
                     
-                    <div class="tab_con tab_con02">
-                        <ul class="info_table">
-                            <li>
-                                <span class="th">아이디</span>
-                                <div>
-                                    <input type="text" id="mbId" class="" name="mbId" placeholder="영문 또는 숫자 4~10자" maxlength="10">
-                                </div>
-                            </li>
-                            <li>
-                                <span class="th">이름</span>
-                                <div>
-                                    <input type="text" id="mbName" class="" name="mbName" placeholder="" >
-                                </div>
-                            </li>
-                            <li>
-                                <span class="th">휴대전화</span>
-                                <div class="phone_area">
-                                    <input type="tel" id="phoneNo" class="" name="phoneNo" maxlength="" placeholder="'-'제외하고 숫자만 입력" >                                       
-                                    <span class="btn small"><a href="/">인증</a></span>
-                                    <input type="tel" id="confirmNo" class="" name="confirmNo" maxlength="" placeholder="인증번호를 입력하세요" >
-                                </div>
-                            </li>
-                         </ul>
-                         <span class="btn_big check"><a href="/"><img src="/images/btn_join_complete.gif" alt="확인" /></a></span>
-                    </div>
+                    <form name="searchIdForm">
+                        <div class="tab_con tab_con01">
+                            <ul class="info_table">
+                                
+                                <li>
+                                    <span class="th">이름</span>
+                                    <div>
+                                        <input type="text" id="mbName" class="" name="userName" placeholder="" maxlength="10">
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="th">휴대전화</span>
+                                    <div class="phone_area">
+                                        <input type="tel" id="phoneNo" class="" name="userMphone" placeholder="'-'제외하고 숫자만 입력" maxlength="11">             
+                                    </div>
+                                </li>
+                            </ul>
+                            <span class="btn_big check">
+                                <a href="javascript://" onclick="searchId();">
+                                    <img src="/images/btn_join_complete.gif" alt="확인" />
+                                </a>
+                            </span>
+                        </div>
+                    </form>
+                   
+                    <form name="searchPwForm">
+                        <div class="tab_con tab_con02">
+                            <ul class="info_table">
+                                <li>
+                                    <span class="th">아이디</span>
+                                    <div>
+                                        <input type="text" id="mbId" class="" name="userId" placeholder="영문 또는 숫자 4~10자" maxlength="12">
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="th">이름</span>
+                                    <div>
+                                        <input type="text" id="mbName" class="" name="userName" placeholder="" maxlength="10">
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="th">휴대전화</span>
+                                    <div class="phone_area">
+                                        <input type="tel" id="phoneNo" class="" name="userMphone" maxlength="11" placeholder="'-'제외하고 숫자만 입력" >                                       
+                                        <!-- <span class="btn small"><a href="/">인증</a></span>
+                                        <input type="tel" id="confirmNo" class="" name="confirmNo" maxlength="" placeholder="인증번호를 입력하세요" > -->
+                                    </div>
+                                </li>
+                            </ul>
+                            <span class="btn_big check">
+                                <a href="javascript://" onclick="searchPw();">
+                                    <img src="/images/btn_join_complete.gif" alt="확인" />
+                                </a>
+                            </span>
+                        </div>
+                    </form>
                 </div>
-                
-        
             </div>
             <!-- E: id/pw 찾기 -->
-        
-            
         </div>
-    
     </div>
     <!-- E: gray layer -->
+
 </div>
 
 </body>

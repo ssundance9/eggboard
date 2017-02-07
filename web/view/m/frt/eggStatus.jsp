@@ -60,9 +60,12 @@
             var today = new Date();
             var tYear = today.getFullYear();
             var tMonth = today.getMonth()+1 + "";
-            var tDay = today.getDate();
+            var tDay = today.getDate() + "";
             if (tMonth.length < 2) {
                 tMonth = "0" + tMonth;
+            }
+            if (tDay.length < 2) {
+                tDay = "0" + tDay;
             }
                         
             if (val == "3") {
@@ -83,12 +86,16 @@
             
             var p = $("#fromDate").datepicker("getDate");
             var month = (p.getMonth() + 1) + "";
+            var dat = p.getDate() + "";
             if (month.length < 2) {
                 month = "0" + month;
             }
+            if (dat.length < 2) {
+                dat = "0" + dat;
+            }
             
-            $("input#fromDate").val(p.getFullYear() + "-" + month + "-" + p.getDate());
-            $("input#fromDateFarm").val(p.getFullYear() + "-" + month + "-" + p.getDate());
+            $("input#fromDate").val(p.getFullYear() + "-" + month + "-" + dat);
+            $("input#fromDateFarm").val(p.getFullYear() + "-" + month + "-" + dat);
             $("input#toDate").val(tYear + "-" + tMonth + "-" + tDay);
             $("input#toDateFarm").val(tYear + "-" + tMonth + "-" + tDay);
         });
@@ -469,7 +476,7 @@
                                         <li>
                                             <span>현재 작업 계사</span>
                                             <c:if test="${not empty eggList }">
-                                                계사 #${farm.farmNo }
+                                                <input type="text" value="계사 #${farm.farmNo }" readonly="readonly"/>
                                             </c:if>
                                             <c:if test="${empty eggList }">
                                                 <input type="text" disabled="disabled"/>
@@ -899,12 +906,12 @@
                                                     <c:forEach var="bin" items="${binList}">
                                                         <li>
                                                             <c:if test="${bin.currentWeight != -1 }">
-                                                                <c:set var="on_off" value="on" />
+                                                                <c:set var="on_off" value="on.jpg" />
                                                             </c:if>
                                                             <c:if test="${bin.currentWeight == -1 }">
-                                                                <c:set var="on_off" value="off" />
+                                                                <c:set var="on_off" value="off.gif" />
                                                             </c:if>
-                                                            <img src="/images_m/img_bin_${bin.binNo }_${on_off }.jpg" alt="images" />
+                                                            <img src="/images_m/img_bin_${bin.binNo }_${on_off }" alt="images" />
                                                             <span class="left">
                                                                 <em>${bin.currentWeight}</em>&nbsp;kg
                                                             </span>

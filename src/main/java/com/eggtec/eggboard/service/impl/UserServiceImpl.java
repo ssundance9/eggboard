@@ -90,4 +90,9 @@ public class UserServiceImpl implements UserService {
         return userDao.selectUserById(user.getUserId());
     }
 
+    @Override
+    public List<User> getUserList(User param) {
+        return userDao.selectUserList(param);
+    }
+
 }

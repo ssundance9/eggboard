@@ -51,4 +51,6 @@ public interface UserService {
 
     User modifyUser(User user, String[] henCount, String[] entDt);
 
+    List<User> getUserList(User param);
+
 }

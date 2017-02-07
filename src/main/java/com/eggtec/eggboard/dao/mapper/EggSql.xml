@@ -27,6 +27,7 @@
         WHERE  a.serial_no = #{serialNo}
         AND    a.farm_no   = #{farmNo}
         AND    a.type      = #{type}
+        AND    a.reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
         ORDER  BY a.work_seq DESC
         LIMIT 1
     </select>
