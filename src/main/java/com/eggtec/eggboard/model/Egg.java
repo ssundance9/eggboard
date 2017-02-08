@@ -1,6 +1,7 @@
 package com.eggtec.eggboard.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 계란
@@ -40,6 +41,8 @@ public class Egg {
     private String toDate;
     
     private String workDate;
+    
+    private List<String> dateList;
 
     public int getWorkSeq() {
         return workSeq;
@@ -175,6 +178,14 @@ public class Egg {
 
     public void setWorkDate(String workDate) {
         this.workDate = workDate;
+    }
+
+    public List<String> getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(List<String> dateList) {
+        this.dateList = dateList;
     }
     
     

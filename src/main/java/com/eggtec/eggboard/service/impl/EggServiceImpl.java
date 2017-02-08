@@ -1,7 +1,11 @@
 package com.eggtec.eggboard.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +78,7 @@ public class EggServiceImpl implements EggService {
             e.setGrade(c.getCodeValue());
             e.setFromDate(fromDate);
             e.setToDate(toDate);
+            e.setDateList(this.getDateList(fromDate, toDate));
             
             
             List<Egg> eggList = eggDao.selectEggListByEgg(e);
@@ -91,6 +96,35 @@ public class EggServiceImpl implements EggService {
         }
         
         return resultMap;
+    }
+    
+    private List<String> getDateList(String fromDate, String toDate) {
+        try {
+            List<String> dateList = new ArrayList<String>();
+            SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+        
+            Date fromD = sf.parse(fromDate);
+            Date toD = sf.parse(toDate);
+            
+            Calendar from = Calendar.getInstance(); 
+            from.setTime(fromD);
+            Calendar to = Calendar.getInstance(); 
+            to.setTime(toD);
+            
+            dateList.add(fromDate);
+            
+            //while (from.compareTo(to) == 0) {
+            for (int i = 0; i < 7; i++) {
+                from.add(Calendar.DATE, 1);
+                dateList.add(sf.format(from.getTime()));
+            }
+            
+            return dateList;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
     }
     
     private double getMaxValue(List<Egg> list) {

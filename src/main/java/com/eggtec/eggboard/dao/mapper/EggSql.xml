@@ -121,30 +121,41 @@
     
     <select id="selectEggListByEgg" parameterType="Egg" resultType="Egg">
         /* selectEggListByEgg */
-        <![CDATA[
-        SELECT work_seq
-             , prod_ratio
-             , qntty
-             , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
-        FROM   tb_egg
-        WHERE  work_seq IN (
-                            SELECT MAX(work_seq)
-                            FROM (
-                                SELECT work_seq
-                                     , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
-                                FROM   tb_farm
-                                WHERE  serial_no = #{serialNo}
-                                AND    farm_no = #{farmNo}
-                                AND    type = 'E'
-                                ANd    reg_dtm >= STR_TO_DATE(CONCAT(#{fromDate}, '000000'), '%Y%m%d%H%i%s')
-                                AND    reg_dtm < STR_TO_DATE(CONCAT(#{toDate}, '235959'), '%Y%m%d%H%i%s')
-                            ) a
-                            GROUP BY a.work_date
-               )
-        AND farm_no = #{farmNo}
-        AND grade = #{grade}
-        ORDER BY work_seq
-        ]]>
+
+        SELECT IFNULL(b.work_seq, -1) work_seq
+             , IFNULL(b.prod_ratio, 0) prod_ratio
+             , IFNULL(b.qntty, 0) qntty
+             , c.work_date
+        FROM   (SELECT work_seq
+                     , prod_ratio
+                     , qntty
+                     , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
+                FROM   tb_egg
+                WHERE  work_seq IN (SELECT MAX(work_seq)
+                                    FROM (SELECT work_seq
+                                               , DATE_FORMAT(reg_dtm, '%Y%m%d') work_date
+                                          FROM   tb_farm
+                                          WHERE  serial_no = #{serialNo}
+                                          AND    farm_no = #{farmNo}
+                                          AND    type = 'E'
+                                          ANd    reg_dtm >= STR_TO_DATE(CONCAT(#{fromDate}, '000000'), '%Y%m%d%H%i%s')
+                                          AND    reg_dtm <![CDATA[<]]> STR_TO_DATE(CONCAT(#{toDate}, '235959'), '%Y%m%d%H%i%s')) a
+                                    GROUP BY a.work_date)
+                AND farm_no = #{farmNo}
+                AND grade = #{grade}) b RIGHT OUTER JOIN (SELECT w.work_date
+                                                          FROM
+                                                          <foreach collection="dateList" item="date"  open="(" close=") w" separator="UNION">
+                                                              SELECT #{date} work_date
+                                                          </foreach>
+                                                          <!-- (SELECT '20170205' work_date
+                                                           UNION
+                                                           SELECT '20170206' work_date
+                                                           UNION
+                                                           SELECT '20170207' work_date) w -->
+                                                         ) c ON b.work_date = c.work_date
+        ORDER BY c.work_date
+        <!-- ORDER BY work_seq -->
+
     </select>
 
 </mapper>
