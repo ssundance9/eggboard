@@ -110,8 +110,13 @@ public class ApiServiceImpl implements ApiService {
             apiDao.insertErrorCode(e);
         }
     }
-    
-    
 
+    @Override
+    public void createWaterInfo(Farm farmObj) {
+        int workSeq = apiDao.selectWorkSeq();
+        farmObj.setWorkSeq(workSeq);
+        
+        apiDao.insertFarm(farmObj);
+    }
 	
 }

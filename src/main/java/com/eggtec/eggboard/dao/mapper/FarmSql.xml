@@ -66,7 +66,8 @@
              , reg_dtm
         FROM tb_farm
         WHere serial_no = #{serialNo}
-        AND type = 'F'
+        AND farm_no = #{farmNo}
+        AND type = #{type}
         AND water_qntty IS NOT NULL
         AND reg_dtm >= STR_TO_DATE(#{today}, '%Y%m%d%H%i%s')
         ORDER BY work_seq
@@ -123,6 +124,18 @@
                )
         ORDER BY work_seq
         ]]>
+    </select>
+    
+    <select id="selectErrorList" resultType="ErrorCode">
+        SELECT work_seq
+             , serial_no
+             , type
+             , error_no
+             , error_code
+             , reg_dtm
+             , mod_dtm
+        FROM   tb_error
+        WHERE  reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
     </select>
 
 </mapper>

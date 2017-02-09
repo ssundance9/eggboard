@@ -344,7 +344,7 @@
     <header role="banner">
         <div class="header">
             <h1 class="logo"><a href="/frt/eggStatus.do"><img src="/images/logo.gif" alt="EGG-Board" /></a></h1>
-            <a href="http://www.eggtec.com" class="btn-mypage">
+            <a href="http://www.eggtec.com" class="btn-mypage" target="blank">
                 <img src="/images/sub_logo.gif" alt="eggtec" />
             </a>
         </div>
@@ -1062,25 +1062,25 @@
                                                 <tbody>
                                                     <c:if test="${empty thermoList }">
                                                         <tr>
-                                                            <th>T1</th>
+                                                            <th style="width: 15%;">T1</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>T2</th>
+                                                            <th style="width: 15%;">T2</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>T3</th>
+                                                            <th style="width: 15%;">T3</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>T4</th>
+                                                            <th style="width: 15%;">T4</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                     </c:if>
                                                     <c:forEach var="thermo" items="${thermoList}">
                                                         <tr>
-                                                            <th>T${thermo.thermometerNo}</th>
+                                                            <th style="width: 15%;">T${thermo.thermometerNo}</th>
                                                             <td>${thermo.degree}°C</td>
                                                         </tr>
                                                     </c:forEach>
@@ -1096,25 +1096,25 @@
                                                 <tbody>
                                                     <c:if test="${empty lightList }">
                                                         <tr>
-                                                            <th>조도1</th>
+                                                            <th style="width: 15%;">조도1</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>조도2</th>
+                                                            <th style="width: 15%;">조도2</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>조도3</th>
+                                                            <th style="width: 15%;">조도3</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>조도4</th>
+                                                            <th style="width: 15%;">조도4</th>
                                                             <td>N/A</td>
                                                         </tr>
                                                     </c:if>
                                                     <c:forEach var="light" items="${lightList}">
                                                         <tr>
-                                                            <th>조도${light.lightNo}</th>
+                                                            <th style="width: 15%;">조도${light.lightNo}</th>
                                                             <td>${light.lux}lux</td>
                                                         </tr>
                                                     </c:forEach>
@@ -1126,35 +1126,42 @@
                                                     </tr> -->
                                                 </tbody>
                                             </table>
-                                            <table class="fan" style="width: 15%;float: left;">
+                                            <table class="temp" style="width: 15%;">
+                                            <!-- <table class="fan" style="width: 15%;float: left;"> -->
                                                 <tbody>
                                                     <c:if test="${empty fanList }">
                                                         <tr>
-                                                            <td>FAN-1 N/A</td>
+                                                            <th style="width: 25%;">FAN-1</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-2 N/A</td>
+                                                            <th style="width: 25%;">FAN-2</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-3 N/A</td>
+                                                            <th style="width: 25%;">FAN-3</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-4 N/A</td>
+                                                            <th style="width: 25%;">FAN-4</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                     </c:if>
                                                     <c:forEach var="fan" items="${fanList}" varStatus="fVs">
                                                         <c:if test="${fVs.index >= 0 && fVs.index < 4}">
                                                             <tr>
                                                                 <c:if test="${fan.status == '2' }">
-                                                                    <td style="background-color: Red">FAN-${fan.fanNo} ERR</td>
+                                                                    <th style="background-color: Red;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td style="background-color: Red">ERR</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '1' }">
-                                                                    <td class="on" style="background-color: LimeGreen">FAN-${fan.fanNo} ON</td>
+                                                                    <th style="background-color: LimeGreen;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td class="on" style="background-color: LimeGreen">ON</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '0' }">
-                                                                    <td style="background-color: Grey">FAN-${fan.fanNo} OFF</td>
+                                                                    <th style="background-color: Grey;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td style="background-color: Grey">OFF</td>
                                                                 </c:if>
-                                                                
                                                             </tr>
                                                         </c:if>
                                                     </c:forEach>
@@ -1176,35 +1183,42 @@
                                                     </tr> -->
                                                 </tbody>
                                             </table>
-                                            <table class="fan" style="width: 15%;">
+                                            <table class="temp" style="width: 15%;">
+                                            <!-- <table class="fan" style="width: 15%;"> -->
                                                 <tbody>
                                                     <c:if test="${empty fanList }">
                                                         <tr>
-                                                            <td>FAN-5 N/A</td>
+                                                            <th style="width: 25%;">FAN-5</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-6 N/A</td>
+                                                            <th style="width: 25%;">FAN-6</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-7 N/A</td>
+                                                            <th style="width: 25%;">FAN-7</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>FAN-8 N/A</td>
+                                                            <th style="width: 25%;">FAN-8</th>
+                                                            <td>N/A</td>
                                                         </tr>
                                                     </c:if>
                                                     <c:forEach var="fan" items="${fanList}" varStatus="fVs">
                                                         <c:if test="${fVs.index >= 4}">
                                                             <tr>
                                                                 <c:if test="${fan.status == '2' }">
-                                                                    <td style="background-color: Red">FAN-${fan.fanNo} ERR</td>
+                                                                    <th style="background-color: Red;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td style="background-color: Red">ERR</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '1' }">
-                                                                    <td class="on" style="background-color: LimeGreen">FAN-${fan.fanNo} ON</td>
+                                                                    <th style="background-color: LimeGreen;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td class="on" style="background-color: LimeGreen">ON</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '0' }">
-                                                                    <td style="background-color: Grey">FAN-${fan.fanNo} OFF</td>
+                                                                    <th style="background-color: Grey;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <td style="background-color: Grey">OFF</td>
                                                                 </c:if>
-                                                                
                                                             </tr>
                                                         </c:if>
                                                     </c:forEach>

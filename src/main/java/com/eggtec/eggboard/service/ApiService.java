@@ -18,4 +18,6 @@ public interface ApiService {
 
     void createErrorInfo(List<ErrorCode> errorList);
 
+    void createWaterInfo(Farm farmObj);
+
 }

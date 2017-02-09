@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.eggtec.eggboard.dao.FarmDao;
 import com.eggtec.eggboard.model.Bin;
 import com.eggtec.eggboard.model.Egg;
+import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Fan;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Light;
@@ -59,5 +60,10 @@ public class FarmDaoImpl implements FarmDao {
     @Override
     public List<Farm> selectWaterListByFarm(Farm param) {
         return sqlSession.selectList("FarmDao.selectWaterListByFarm", param);
+    }
+
+    @Override
+    public List<ErrorCode> selectErrorList() {
+        return sqlSession.selectList("FarmDao.selectErrorList");
     }
 }

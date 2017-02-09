@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eggtec.eggboard.model.Bin;
 import com.eggtec.eggboard.model.Egg;
+import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Fan;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Hen;
@@ -70,11 +71,14 @@ public class FrontController extends BaseController {
         Farm farm = (Farm) resultMap.get("farmInfo");
         List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
         List<Hen> henList = (List<Hen>) resultMap.get("henInfo");
+        String errorCode = (String) resultMap.get("errorInfo");
         
         model.addAttribute("farm", farm);
         model.addAttribute("eggList", eggList);
         model.addAttribute("henList", henList);
+        model.addAttribute("errorCode", errorCode);
         model.addAttribute("today", new Date());
+        
         
         return getViewPrepix() + "/frt/eggStatus";
         
@@ -87,6 +91,7 @@ public class FrontController extends BaseController {
         User user = super.getUser();
         Farm farm = null;
         List<Hen> henList = null;
+        String errorCode = null;
         
         if (farmNo == null) {
             farmNo = 1;
@@ -106,6 +111,7 @@ public class FrontController extends BaseController {
             Map<String, Object> resultMap = frontService.eggStatistics(param, user.getUserId(), fromDate, toDate);
             farm = (Farm) resultMap.get("farmInfo");
             henList = (List<Hen>) resultMap.get("henInfo");
+            errorCode = (String) resultMap.get("errorInfo");
             
         } else {
             fromDate = StringUtils.remove(fromDate, Constants.dateSeparator);
@@ -117,6 +123,7 @@ public class FrontController extends BaseController {
             henList = (List<Hen>) resultMap.get("henInfo");
             List<List<Egg>> list = (List<List<Egg>>) resultMap.get("statisticsInfo");
             Double maxVal = (Double) resultMap.get("maxVal");
+            errorCode = (String) resultMap.get("errorInfo");
             
             
             model.addAttribute("list", list);
@@ -125,6 +132,7 @@ public class FrontController extends BaseController {
         
         model.addAttribute("farm", farm);
         model.addAttribute("henList", henList);
+        model.addAttribute("errorCode", errorCode);
         model.addAttribute("today", new Date());
         model.addAttribute("fromDate", fromDate);
         model.addAttribute("toDate", toDate);
@@ -151,6 +159,7 @@ public class FrontController extends BaseController {
         List<Light> lightList = (List<Light>) resultMap.get("lightInfo");
         List<Thermometer> thermoList = (List<Thermometer>) resultMap.get("thermoInfo");
         List<Farm> waterList = (List<Farm>) resultMap.get("waterInfo");
+        String errorCode = (String) resultMap.get("errorInfo");
         
         String fromDateFarm = this.getFromDate(-2);
         String toDateFarm = this.getToDate();
@@ -162,6 +171,7 @@ public class FrontController extends BaseController {
         model.addAttribute("lightList", lightList);
         model.addAttribute("thermoList", thermoList);
         model.addAttribute("waterList", waterList);
+        model.addAttribute("errorCode", errorCode);
         model.addAttribute("today", new Date());
         model.addAttribute("fromDateFarm", fromDateFarm);
         model.addAttribute("toDateFarm", toDateFarm);

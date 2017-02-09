@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.eggtec.eggboard.model.Bin;
 import com.eggtec.eggboard.model.Egg;
+import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Fan;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Light;
@@ -26,4 +27,6 @@ public interface FarmDao {
     List<Bin> selectBinListByBin(Bin param);
 
     List<Farm> selectWaterListByFarm(Farm param);
+
+    List<ErrorCode> selectErrorList();
 }

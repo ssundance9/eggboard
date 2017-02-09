@@ -602,6 +602,7 @@
                                         <li>
                                             <span>기간 조회</span>
                                             <select id="selectSearchDate">
+                                                <option value="0">선택</option>
                                                 <option value="3">최근3일</option>
                                                 <option value="7">최근7일</option>
                                                 <option value="15">최근15일</option>

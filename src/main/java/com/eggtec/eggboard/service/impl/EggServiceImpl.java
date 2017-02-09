@@ -17,12 +17,16 @@ import org.springframework.stereotype.Service;
 import com.eggtec.eggboard.dao.EggDao;
 import com.eggtec.eggboard.model.Code;
 import com.eggtec.eggboard.model.Egg;
+import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Hen;
 import com.eggtec.eggboard.service.EggService;
+import com.eggtec.eggboard.service.FarmService;
 
 @Service
 public class EggServiceImpl implements EggService {
+    @Inject
+    FarmService farmService;
     
     @Inject
     EggDao eggDao;
@@ -34,10 +38,12 @@ public class EggServiceImpl implements EggService {
         Farm farm = eggDao.selectFarmJustNow(param);
         List<Egg> eggList = eggDao.selectEggListByFarm(farm);
         List<Hen> henList = eggDao.selectHenListById(userId);
+        String errorCode = farmService.getErrorCode();
         
         resultMap.put("farmInfo", farm);
         resultMap.put("eggInfo", eggList);
         resultMap.put("henInfo", henList);
+        resultMap.put("errorInfo", errorCode);
         
         return resultMap;
     }
@@ -61,14 +67,12 @@ public class EggServiceImpl implements EggService {
     public Map<String, Object> eggStatistics(Farm param, String userId, String fromDate, String toDate) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        Farm farm = eggDao.selectFarm(param);
+        Farm farm = eggDao.selectFarmJustNow(param);
         List<Hen> henList = eggDao.selectHenListById(userId);
         
         List<List<Egg>> list = new ArrayList<List<Egg>>();
         List<Code> codeList = eggDao.selectCodeListByCodeGroup("grade");
         List<Double> maxValList = new ArrayList<Double>();
-        
-        
         
         for (int i = 0; i < codeList.size(); i++) {
             Code c = codeList.get(i);
@@ -88,12 +92,15 @@ public class EggServiceImpl implements EggService {
             }
         }
         
+        String errorCode = farmService.getErrorCode();
+        
         resultMap.put("farmInfo", farm);
         resultMap.put("henInfo", henList);
         resultMap.put("statisticsInfo", list);
         if (!maxValList.isEmpty()) {
             resultMap.put("maxVal", Collections.max(maxValList)); // 그래프 Y축 최대값
         }
+        resultMap.put("errorInfo", errorCode);
         
         return resultMap;
     }
@@ -102,7 +109,7 @@ public class EggServiceImpl implements EggService {
         try {
             List<String> dateList = new ArrayList<String>();
             SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
-        
+            
             Date fromD = sf.parse(fromDate);
             Date toD = sf.parse(toDate);
             
@@ -113,10 +120,11 @@ public class EggServiceImpl implements EggService {
             
             dateList.add(fromDate);
             
-            //while (from.compareTo(to) == 0) {
-            for (int i = 0; i < 7; i++) {
+            while (from.compareTo(to) < 0) {
                 from.add(Calendar.DATE, 1);
                 dateList.add(sf.format(from.getTime()));
+                
+                if (dateList.size() == 10) break;
             }
             
             return dateList;

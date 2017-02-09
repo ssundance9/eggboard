@@ -27,8 +27,8 @@
         <property name="username" value="root"/>
         <property name="password" value="1274j"/> -->
         
-        <property name="url" value="jdbc:mysql://localhost:3306/eggtec1201?useUnicode=true&amp;characterEncoding=utf8"/>
-        <property name="username" value="eggtec1201"/>
+        <property name="url" value="jdbc:mysql://innodb-005.cafe24.com:3306/eggtecdb?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="eggtecdb"/>
         <property name="password" value="dprm2356!!"/>
     </bean>
     

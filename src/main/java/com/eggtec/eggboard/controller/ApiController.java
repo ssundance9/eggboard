@@ -32,6 +32,7 @@ import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Light;
 import com.eggtec.eggboard.model.Thermometer;
 import com.eggtec.eggboard.service.ApiService;
+import com.eggtec.eggboard.util.Constants;
 
 @Controller
 public class ApiController {
@@ -119,7 +120,9 @@ public class ApiController {
             XPath  xpath = XPathFactory.newInstance().newXPath();
             
             String serialNo = (String) xpath.evaluate("//*/serialNo", document, XPathConstants.STRING);
-            String waterQntty = (String) xpath.evaluate("//*/waterQuantity", document, XPathConstants.STRING);
+            //String waterQntty = (String) xpath.evaluate("//*/waterQuantity", document, XPathConstants.STRING);
+            String connectionStatus = (String) xpath.evaluate("//*/connectionStatus", document, XPathConstants.STRING);
+            String status = (String) xpath.evaluate("//*/status", document, XPathConstants.STRING);
             List<Farm> farmList = new ArrayList<Farm>();
             List<Bin> binList = new ArrayList<Bin>();
             List<Thermometer> thermoList = new ArrayList<Thermometer>();
@@ -133,16 +136,18 @@ public class ApiController {
                 Farm farmObj = new Farm();
                 farmObj.setSerialNo(serialNo);
                 farmObj.setType("F");
-                farmObj.setFarmNo(1); // 시설현황은 계사별로 존재하지 않음 임의번호 부여
-                farmObj.setWaterQntty(convertToDouble(waterQntty));
-                int farmNo = farmObj.getFarmNo();
+                farmObj.setFarmNo(1); // 시설현황은 계사별로 존재하지 않음 고정번호 부여
+                farmObj.setConnectionStatus(connectionStatus);
+                farmObj.setStatus(status);
+                //farmObj.setWaterQntty(convertToDouble(waterQntty));
+                //int farmNo = farmObj.getFarmNo();
                 farmList.add(farmObj);
                 
                 //String ex = "/farms/farm[no="+ farmNo +"]/bins/bin";
                 String ex = "/equips/bins/bin";
                 NodeList bins = (NodeList) xpath.evaluate(ex, document, XPathConstants.NODESET);
                 for (int j = 0; j < bins.getLength(); j++){
-                    Bin binObj = convertToBin(bins.item(j), serialNo, farmNo);
+                    Bin binObj = convertToBin(bins.item(j), serialNo);
                     binList.add(binObj);
                 }
                 
@@ -150,7 +155,7 @@ public class ApiController {
                 ex = "/equips/thermometers/thermometer";
                 NodeList thermos = (NodeList) xpath.evaluate(ex, document, XPathConstants.NODESET);
                 for (int k = 0; k < thermos.getLength(); k++){
-                    Thermometer thermoObj = convertToThermo(thermos.item(k), serialNo, farmNo);
+                    Thermometer thermoObj = convertToThermo(thermos.item(k), serialNo);
                     thermoList.add(thermoObj);
                 }
                 
@@ -158,7 +163,7 @@ public class ApiController {
                 ex = "/equips/lights/light";
                 NodeList lights = (NodeList) xpath.evaluate(ex, document, XPathConstants.NODESET);
                 for (int l = 0; l < lights.getLength(); l++){
-                    Light lightObj = convertToLight(lights.item(l), serialNo, farmNo);
+                    Light lightObj = convertToLight(lights.item(l), serialNo);
                     lightList.add(lightObj);
                 }
                 
@@ -166,7 +171,7 @@ public class ApiController {
                 ex = "/equips/fans/fan";
                 NodeList fans = (NodeList) xpath.evaluate(ex, document, XPathConstants.NODESET);
                 for (int m = 0; m < fans.getLength(); m++){
-                    Fan fanObj = convertToFan(fans.item(m), serialNo, farmNo);
+                    Fan fanObj = convertToFan(fans.item(m), serialNo);
                     fanList.add(fanObj);
                 }
             //}
@@ -247,6 +252,53 @@ public class ApiController {
         return "/api/result";
     }
     
+    @RequestMapping("/api/uploadWaterData")
+    public String uploadWaterData(HttpServletRequest req) {
+        String message = "";
+        String code = "";
+        String resultStr = "";
+        
+        try{
+            InputSource is = new InputSource(req.getReader());
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+            document.getDocumentElement().normalize();
+            
+            log.debug(convertToString(document));
+
+            // xpath 생성
+            XPath  xpath = XPathFactory.newInstance().newXPath();
+            
+            String serialNo = (String) xpath.evaluate("//*/serialNo", document, XPathConstants.STRING);
+            Double waterQuantity = (Double) xpath.evaluate("//*/waterQuantity", document, XPathConstants.NUMBER);
+            
+            Farm farmObj = new Farm();
+            farmObj.setSerialNo(serialNo);
+            farmObj.setType(Constants.DataTypeWater);
+            farmObj.setFarmNo(1); // 급수현황은 계사별로 존재하지 않음 고정번호 부여
+            farmObj.setWaterQntty(waterQuantity);
+            
+            apiService.createWaterInfo(farmObj);
+            
+            message = "성공";
+            code = "00";
+            resultStr = "<result>"
+                          + "<message>" + message + "</message>"
+                          + "<code>" + code + "</code>"
+                      + "</result>";
+        } catch(Exception e) {
+            message = "실패 : " + e.getMessage();
+            code = "99";
+            resultStr = "<result>"
+                    + "<message>" + message + "</message>"
+                    + "<code>" + code + "</code>"
+                + "</result>";
+            e.printStackTrace();
+        }
+
+        req.setAttribute("resultStr", resultStr);
+        return "/api/result";
+    }
+    
     private String getSingleNodeTextContent(NodeList nl, String nodeName) {
         String text = "";
         
@@ -293,7 +345,7 @@ public class ApiController {
         return eggObj;
     }
     
-    private Bin convertToBin(Node bin, String serialNo, int farmNo) {
+    private Bin convertToBin(Node bin, String serialNo) {
         Bin binObj = new Bin();
         binObj.setSerialNo(serialNo);
         //binObj.setFarmNo(farmNo);
@@ -305,7 +357,7 @@ public class ApiController {
         return binObj;
     }
     
-    private Thermometer convertToThermo(Node thermo, String serialNo, int farmNo) {
+    private Thermometer convertToThermo(Node thermo, String serialNo) {
         Thermometer thermoObj = new Thermometer();
         thermoObj.setSerialNo(serialNo);
         //thermoObj.setFarmNo(farmNo);
@@ -315,7 +367,7 @@ public class ApiController {
         return thermoObj;
     }
     
-    private Fan convertToFan(Node fan, String serialNo, int farmNo) {
+    private Fan convertToFan(Node fan, String serialNo) {
         Fan fanObj = new Fan();
         fanObj.setSerialNo(serialNo);
         //fanObj.setFarmNo(farmNo);
@@ -325,7 +377,7 @@ public class ApiController {
         return fanObj;
     }
     
-    private Light convertToLight(Node light, String serialNo, int farmNo) {
+    private Light convertToLight(Node light, String serialNo) {
         Light lightObj = new Light();
         lightObj.setSerialNo(serialNo);
         //lightObj.setFarmNo(farmNo);

@@ -18,6 +18,10 @@ public class Constants {
      */
     public static String DataTypeFarm = "F";
     /**
+     * 데이터 유형 - 급수현황
+     */
+    public static String DataTypeWater = "W";
+    /**
      * 날짜 구분자
      */
     public static String dateSeparator = "-";
