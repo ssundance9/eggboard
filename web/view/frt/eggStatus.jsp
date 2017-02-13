@@ -826,27 +826,27 @@
                                                 <c:if test="${empty binList}">
                                                     <li>
                                                         <img src="/images/img_bin_1_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                     <li>
                                                         <img src="/images/img_bin_2_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                     <li>
                                                         <img src="/images/img_bin_3_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                     <li>
                                                         <img src="/images/img_bin_4_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                     <li>
                                                         <img src="/images/img_bin_5_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                     <li>
                                                         <img src="/images/img_bin_6_off.gif" alt="images" />
-                                                        <span class="left">잔량:&nbsp;<em>0</em>kg</span>
+                                                        <span class="left">잔량:&nbsp;<em>0</em>&nbsp;kg</span>
                                                     </li>
                                                 </c:if>
                                                 <c:forEach var="bin" items="${binList}" varStatus="vs">
@@ -888,7 +888,7 @@
                                                             <img src="/images/img_bin_6_off.gif" alt="images" />
                                                         </c:if>
                                                         <span class="left">
-                                                            잔량:&nbsp;<em>${bin.currentWeight}</em>&nbsp;kg
+                                                            잔량:&nbsp;<em style="width: 52px;">${bin.currentWeight}</em>&nbsp;kg
                                                         </span>
                                                     </li>
                                                 </c:forEach>
@@ -1081,7 +1081,7 @@
                                                     <c:forEach var="thermo" items="${thermoList}">
                                                         <tr>
                                                             <th style="width: 15%;">T${thermo.thermometerNo}</th>
-                                                            <td>${thermo.degree}°C</td>
+                                                            <td>${thermo.degree} °C</td>
                                                         </tr>
                                                     </c:forEach>
                                                     <!-- <tr>
@@ -1115,7 +1115,7 @@
                                                     <c:forEach var="light" items="${lightList}">
                                                         <tr>
                                                             <th style="width: 15%;">조도${light.lightNo}</th>
-                                                            <td>${light.lux}lux</td>
+                                                            <td>${light.lux} lux</td>
                                                         </tr>
                                                     </c:forEach>
                                                     <!-- <tr>
@@ -1151,15 +1151,15 @@
                                                         <c:if test="${fVs.index >= 0 && fVs.index < 4}">
                                                             <tr>
                                                                 <c:if test="${fan.status == '2' }">
-                                                                    <th style="background-color: Red;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td style="background-color: Red">ERR</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '1' }">
-                                                                    <th style="background-color: LimeGreen;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td class="on" style="background-color: LimeGreen">ON</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '0' }">
-                                                                    <th style="background-color: Grey;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td style="background-color: Grey">OFF</td>
                                                                 </c:if>
                                                             </tr>
@@ -1208,15 +1208,15 @@
                                                         <c:if test="${fVs.index >= 4}">
                                                             <tr>
                                                                 <c:if test="${fan.status == '2' }">
-                                                                    <th style="background-color: Red;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td style="background-color: Red">ERR</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '1' }">
-                                                                    <th style="background-color: LimeGreen;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td class="on" style="background-color: LimeGreen">ON</td>
                                                                 </c:if>
                                                                 <c:if test="${fan.status == '0' }">
-                                                                    <th style="background-color: Grey;width: 25%;">FAN-${fan.fanNo}</th>
+                                                                    <th style="width: 25%;">FAN-${fan.fanNo}</th>
                                                                     <td style="background-color: Grey">OFF</td>
                                                                 </c:if>
                                                             </tr>
