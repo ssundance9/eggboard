@@ -6,18 +6,20 @@
         SELECT a.work_seq             workSeq
              , a.serial_no            serialNo
              , a.farm_no              farmNo
-             , (SELECT connection_status
+             , a.connection_status
+             , a.status
+             <!-- , (SELECT connection_status
                 FROM   tb_farm
                 WHERE  serial_no = a.serial_no
                 AND    connection_status IS NOT NULL
                 AND    reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
-                ORDER  BY work_seq DESC LIMIT 1) connectionStatus
-             , (SELECT status
+                ORDER  BY work_seq DESC LIMIT 1) connectionStatus -->
+             <!-- , (SELECT status
                 FROM   tb_farm
                 WHERE  serial_no = a.serial_no
                 AND    status IS NOT NULL
                 AND    reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
-                ORDER  BY work_seq DESC LIMIT 1) status
+                ORDER  BY work_seq DESC LIMIT 1) status -->
              , a.input_count          inputCount
              , a.water_qntty          waterQntty
              , a.type                 type
@@ -27,7 +29,7 @@
         WHERE  a.serial_no = #{serialNo}
         AND    a.farm_no   = #{farmNo}
         AND    a.type      = #{type}
-        AND    a.reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
+        <!-- AND    a.reg_dtm >= DATE_ADD(NOW(), interval -1 hour) -->
         ORDER  BY a.work_seq DESC
         LIMIT 1
     </select>
@@ -56,7 +58,9 @@
              , a.mod_dtm              modDtm
         FROM   tb_farm a
         WHERE  a.serial_no = #{serialNo}
-        <!-- AND    a.farm_no   = #{farmNo} -->
+        <if test="farmNo != null">
+            AND    a.farm_no   = #{farmNo}
+        </if>
         AND    a.type      = #{type}
         AND    a.reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
         ORDER  BY a.work_seq DESC

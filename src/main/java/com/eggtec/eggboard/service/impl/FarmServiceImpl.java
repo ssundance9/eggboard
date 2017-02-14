@@ -37,20 +37,20 @@ public class FarmServiceImpl implements FarmService {
     public Map<String, Object> getFarmStatus(Farm param, String userId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        Farm farm = eggService.getFarm(param);
+        Farm farm = eggService.getFarmJustNow(param);
         List<Hen> henList = eggService.getHenListById(userId);
         List<Bin> binList = farmDao.selectBinListByFarm(farm);
         List<Fan> fanList = farmDao.selectFanListByFarm(farm);
         List<Light> lightList = farmDao.selectLightListByFarm(farm);
         List<Thermometer> thermoList = farmDao.selectThermoListByFarm(farm);
         
-        if (farm != null) {
+        //if (farm != null) {
             SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
-            farm.setToday(sf.format(new Date()) + "000000");
-            farm.setType(Constants.DataTypeWater);
-            List<Farm> waterList = farmDao.selectTodayWaterListByFarm(farm);
+            param.setToday(sf.format(new Date()) + "000000");
+            param.setType(Constants.DataTypeWater);
+            List<Farm> waterList = farmDao.selectTodayWaterListByFarm(param);
             resultMap.put("waterInfo", waterList);
-        }
+        //}
         
         // 시설현황에서는 상태값을 안줘서 선별현황쪽 데이터로 대신 >> 주는 것으로 바뀜
         //param.setType(Constants.DataTypeEgg);

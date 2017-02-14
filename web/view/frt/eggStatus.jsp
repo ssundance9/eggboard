@@ -210,7 +210,9 @@
                 },
                 axes: {
                     xaxis: {
-                        pad: 1.1
+                        min: 0,
+                        max: 24.5,
+                        pad: 0
                     },
                     yaxis: {
                         max: 2000,
