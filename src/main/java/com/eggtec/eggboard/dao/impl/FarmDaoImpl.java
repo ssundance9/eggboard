@@ -66,4 +66,9 @@ public class FarmDaoImpl implements FarmDao {
     public List<ErrorCode> selectErrorList() {
         return sqlSession.selectList("FarmDao.selectErrorList");
     }
+
+    @Override
+    public List<Farm> selectFarmWorkList(Farm param) {
+        return sqlSession.selectList("FarmDao.selectFarmWorkList", param);
+    }
 }

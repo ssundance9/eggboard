@@ -161,6 +161,22 @@
         <!-- ORDER BY work_seq -->
 
     </select>
+    
+    <select id="selectEggWorkList" parameterType="Farm" resultType="Farm">
+        SELECT c.work_seq
+             , c.serial_no
+             , c.farm_no
+             , c.input_count
+             , c.reg_dtm
+             , (SELECT COUNT(*)
+                FROM   tb_hen a, tb_user b
+                WHERE a.user_id = b.user_id
+                AND   b.serial_no = c.serial_no) farmCount
+        FROM   tb_farm c
+        WHERE  c.serial_no = #{serialNo}
+        AND    type = #{type}
+        ORDER BY c.work_seq DESC, c.farm_no
+    </select>
 
 </mapper>
 

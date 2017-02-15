@@ -43,7 +43,8 @@ public class UserDaoImpl implements UserDao {
         //int limit  = this.pageSize;
         //RowBounds rb = new RowBounds(offset, limit);
         
-        return sqlSession.selectList("UserDao.selectUserList", user, new RowBounds(user.getListSize() * (user.getPageNum() - 1), user.getListSize()));
+        //return sqlSession.selectList("UserDao.selectUserList", user, new RowBounds(user.getListSize() * (user.getPageNum() - 1), user.getListSize()));
+        return sqlSession.selectList("UserDao.selectUserList", user);
     }
 
     @Override

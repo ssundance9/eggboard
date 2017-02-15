@@ -11,15 +11,11 @@
     <meta property="og:description" content="" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>EGG-Board</title>
-    <link type="text/css" rel="stylesheet" href="/css/global.css" />    
+    <link type="text/css" rel="stylesheet" href="/css/global.css" />
     <link type="text/css" rel="stylesheet" href="/css/style_pc.css" />
-    <link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
-    <link type="text/css" rel="stylesheet" href="/css/jquery.jqplot.min.css" />
-    
     <script src="/js/jquery-1.9.1.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/common.js"></script>
-    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script type="text/javascript">
     var checkedId = false;
     var checkedEmail = false;
@@ -349,10 +345,10 @@
         if (!validateParam(form.find("input[name='userEmail']"), "이메일을 입력해 주세요.")) {
             return false;
         }
-        if (!checkedEmail) {
+        /* if (!checkedEmail) {
             alert("이메일 중복 확인을 해주세요.");
             return false;
-        }
+        } */
         if (!validateParam(form.find("input[name='userAddress1']"), "주소를 입력해 주세요.")) {
             return false;
         }
@@ -398,10 +394,12 @@
 <div class="wrapper">
     <!-- S: header -->
     <header role="banner">
+        
         <div class="header">
-            <h1 class="logo"><a href="/frt/eggStatus.do"><img src="/images/logo.gif" alt="EGG-Board" /></a></h1>
+            <h1 class="logo"><a href="/main.do"><img src="/images/logo.gif" alt="EGG-Board" /></a></h1>
             <a class="btn-mypage"><img src="/images/sub_logo.gif" alt="eggtec" /></a>
         </div>
+        
     </header>
     <!-- E: header -->
 
@@ -416,45 +414,26 @@
                 </div>
                 <div class="login_info">
                     <p>
-                        <c:if test="${empty user.photoInfo}">
-                            <img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" />
-                        </c:if>
-                        <c:if test="${not empty user.photoInfo}">
-                            <img src="${user.photoInfo }" width="100%" height="auto" alt="농장이름" />
-                        </c:if>
-                        
-                        
-                        <span>${user.farmName}</span>
+                        <!-- <img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" /> -->
+                        <img src="/images/farm_default.jpg" width="100%" height="auto" alt="농장이름" />
+                        <span style="position: static;">${admin.userName }</span>
                     </p>
                     <p><a href="/logout.do">로그아웃</a></p>
-                    <p><a href="/frt/mypageView.do">정보수정</a></p>
+                    <!-- <p><a href="javascript://">정보수정</a></p> -->
                 </div>
-                <%-- <div class="data">
-                    <div class="communication">
-                        <p>통신</p>
-                        <c:if test="${farm.connectionStatus == '0'}">
-                            <p class="gradient01">에러</p>
-                        </c:if>
-                        <c:if test="${farm.connectionStatus == '1'}">
-                            <p class="gradient01">정상</p>
-                        </c:if>
-                    </div>
-                    <div class="equipment">
-                        <p>장비연결</p>
-                        <c:if test="${farm.status == '0'}">
-                            <p class="gradient02">에러</p>
-                        </c:if>
-                        <c:if test="${farm.status == '1'}">
-                            <p class="gradient02">정상</p>
-                        </c:if>
-                    </div>
+                <div class="data" style="padding-top: 50px;">
+                    <ul>
+                        <li>
+                            <a href="/adm/userStatus.do" style="color: white;">* 회원관리&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </li>
+                        <li>
+                            <a href="/adm/eggStatus.do" style="color: white;">* 선별현황데이터</a>
+                        </li>
+                        <li>
+                            <a href="/adm/farmStatus.do" style="color: white;">* 시설현황데이터</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="now_state">
-                    <p><span class="gradient03">정상 동작중</span></p>
-                    <p class="time">오전 12시 30분</p>
-                    <p>현재 상태는<br/>정상 동작중입니다.</p>
-                    <p class="refresh"><a href="#">새로고침<i></i></a></p>
-                </div> --%>
                 <p class="neonics"><img src="/images/img_neonics.gif" width="100%" height="auto" alt="Solution by NEONICS" /></p>
             </div>
             <!-- E: link_state -->
@@ -465,7 +444,7 @@
                     
                     <!-- S: join -->
                     <div class="join_wrap">
-                        <form name="registForm" method="post" action="/frt/modifyUser.do" enctype="multipart/form-data">
+                        <form name="registForm" method="post" action="/adm/modifyUser.do" enctype="multipart/form-data">
                             <div class="join_info">
                                 <ul class="info_table">
                                     <li>
@@ -508,9 +487,9 @@
                                     <li>
                                         <span class="th">이메일</span>
                                         <div>
-                                            <input type="text" id="userEmail" class="" name="userEmail" value="${member.userEmail}" placeholder="" maxlength="30">
+                                            <input type="text" id="userEmail" class="" name="userEmail" value="${member.userEmail}" placeholder="" maxlength="30" readonly="readonly">
                                             <span class="notice" id="spanUserEmailNotice" style="display:none;">올바른 메일형식으로 입력해 주세요.</span>
-                                            <span class="btn medium"><a href="javascript://" onclick="checkEmail();">중복확인</a></span>
+                                            <!-- <span class="btn medium"><a href="javascript://" onclick="checkEmail();">중복확인</a></span> -->
                                         </div>
                                     </li>
                                     <li>
@@ -529,14 +508,14 @@
                                             <input type="text" id="farmName" class="" name="farmName" value="${member.farmName}" placeholder="" maxlength="10">
                                         </div>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <span class="th">사진</span>
                                         <div>
                                             <input type="file" id="uploadFile" class="" name="uploadFile" placeholder="" >
                                         </div>
                                         
-                                    </li>
-                                    <li class="select_li">
+                                    </li> -->
+                                    <%-- <li class="select_li">
                                         <div class="left">
                                             <span class="th">계사총수</span>
                                             <div>
@@ -576,10 +555,10 @@
                                                 <input type="text" id="allhenNo" class="" name="allhenNo" value="${totCnt1}" placeholder="" value="0" readonly="readonly">
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> --%>
                                 </ul>
                                 
-                                <div class="tabal_wrap">
+                                <%-- <div class="tabal_wrap">
                                     <table class="henhouse_table henhouse01">
                                         <colgroup>
                                             <col width="90px">
@@ -644,14 +623,13 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
-                                </div>
+                                </div> --%>
                                 
                             </div>
                         </form>
                         
-                        <div class="btn_big btn_join_member">
-                            <a href="javascript://" onclick="registUser();" style="height: 40px;">
-                                <!-- <img src="/images/btn_join_member.gif" alt="회원가입" /> -->
+                        <div class="btn_big btn_join_member" >
+                            <a href="javascript://" onclick="registUser();" style="margin-top: 0px;height: 40px;">
                                 <span style="color:white;font-size: 24px;">수정</span>
                             </a>
                         </div>
@@ -675,11 +653,11 @@
         <!-- S: Site Info -->
         <div class="siteInfo clearfix">
             <ul>
-                <li><a href="http://eggtec.com/%ED%9A%8C%EC%82%AC%EA%B0%9C%EC%9A%94/" target="blank">회사소개</a></li>
+                <li><a href="#">회사소개</a></li>
                 <li><a href="#">이용약관</a></li>
                 <li><a href="#">개인정보취급방침</a></li>
-                <!-- <li><a href="#">이용안내</a></li> -->
-                <li><a href="http://eggtec.com/%EC%A0%9C%ED%92%88%EB%AC%B8%EC%9D%98/" target="blank">문의게시판</a></li>
+                <li><a href="#">이용안내</a></li>
+                <li><a href="#">문의게시판</a></li>
                 <!--<li><a href="https://www.twayair.com/main.do?frontYn=Y">PC버전</a></li>-->
             </ul>
         </div>

@@ -21,6 +21,8 @@ public interface EggService {
 
     Farm getFarmJustNow(Farm param);
 
+    List<Farm> getEggWorkList(Farm param);
+
     
 
 }

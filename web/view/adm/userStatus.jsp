@@ -84,15 +84,36 @@
             <!-- S: link_state -->
             <div class="link_state">
                 <div class="today">
-                    <p>2017-01-01</>
-                    <p>수요일 &#124; Wednesday </p>
+                    <p>
+                        <fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/>
+                    </p>
+                    <p>
+                        <fmt:formatDate value="${today}" pattern="E"/>요일
+                    </p>
                 </div>
                 <div class="login_info">
-                    <p><img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" /><span>액솔농장</span></p>
+                    <p>
+                        <!-- <img src="/images/img_farm.gif" width="100%" height="auto" alt="농장이름" /> -->
+                        <img src="/images/farm_default.jpg" width="100%" height="auto" alt="농장이름" />
+                        <span style="position: static;">${admin.userName }</span>
+                    </p>
                     <p><a href="/logout.do">로그아웃</a></p>
                     <!-- <p><a href="javascript://">정보수정</a></p> -->
                 </div>
-                <div class="data">
+                <div class="data" style="padding-top: 50px;">
+                    <ul>
+                        <li>
+                            <a href="/adm/userStatus.do" style="color: white;">* 회원관리&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </li>
+                        <li>
+                            <a href="/adm/eggStatus.do" style="color: white;">* 선별현황데이터</a>
+                        </li>
+                        <li>
+                            <a href="/adm/farmStatus.do" style="color: white;">* 시설현황데이터</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div class="data">
                     <div class="communication"><p>통신</p><p class="gradient01">정상</p></div>
                     <div class="equipment"><p>장비연결</p><p class="gradient02">정상</p></div>
                     
@@ -101,7 +122,7 @@
                     <p><span>현재 상태</span></p>
                     <p class="time">오전 12시 30분<i></i></p>
                     <p class="gradient03">정상 동작중</p>
-                </div>
+                </div> -->
                 <p class="neonics"><img src="/images/img_neonics.gif" width="100%" height="auto" alt="Solution by NEONICS" /></p>
             </div>
             <!-- E: link_state -->
@@ -119,7 +140,8 @@
                         <!-- S: tab_con01 -->
                         <div class="tab_con tab_con01">
                             <div class="select_table">
-                                회원목록 (회원수 : , 미승인 회원 :)
+                                <!-- 회원목록 (회원수 : , 미승인 회원 :) -->
+                                <span>* 회원관리</span>
                             </div>
                             <div class="table">
                                 <table>
@@ -136,11 +158,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach var="user" items="${userList}">
+                                        <c:forEach var="user" items="${userList}" varStatus="vs">
                                             <tr id="${user.userId}">
-                                                <th></th>
+                                                <th>${vs.count }</th>
                                                 <td>
-                                                    ${user.userId}
+                                                    <a href="/adm/userDetail.do?userId=${user.userId}">
+                                                        ${user.userId}
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     ${user.farmName}

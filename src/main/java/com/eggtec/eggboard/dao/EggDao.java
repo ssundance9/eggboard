@@ -21,4 +21,6 @@ public interface EggDao {
 
     Farm selectFarmJustNow(Farm param);
 
+    List<Farm> selectEggWorkList(Farm param);
+
 }

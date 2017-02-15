@@ -40,6 +40,8 @@ public class Farm {
     private String toDate;
     
     private String workDate;
+    
+    private Integer farmCount;
 
     public int getWorkSeq() {
         return workSeq;
@@ -174,6 +176,14 @@ public class Farm {
 
     public void setWorkDate(String workDate) {
         this.workDate = workDate;
+    }
+
+    public Integer getFarmCount() {
+        return farmCount;
+    }
+
+    public void setFarmCount(Integer farmCount) {
+        this.farmCount = farmCount;
     }
     
     

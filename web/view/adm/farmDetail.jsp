@@ -44,7 +44,7 @@
         $("#selectFarm").on("change", function() {
             var serialNo = $(this).val();
             //if (!isEmpty(serialNo)) {
-                document.location.href="/adm/eggStatus.do?serialNo=" + serialNo;
+                document.location.href="/adm/farmStatus.do?serialNo=" + serialNo;
             //}
         });
     });
@@ -147,7 +147,7 @@
                             <div class="select_table">
                                 <!-- 회원목록 (회원수 : , 미승인 회원 :)
                                 <br/><br/><br/> -->
-                                <span>* 선별현황데이터</span>
+                                <span>* 시설현황데이터</span>
                                 <br/><br/><br/>
                                 <span>농장선택</span>
                                 <select name="selectFarm" id="selectFarm" style="width: 200px;">
@@ -165,35 +165,21 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>전송일시</th>
-                                            <th>계사/계사총수</th>
-                                            <th>투입량</th>
-                                            <!-- <th>에러메시지</th> -->
+                                            <th>급이 잔류량</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:if test="${empty eggWorkList }">
+                                        <c:if test="${empty binList }">
                                             <tr>
                                                 <td colspan="4">데이터가 없습니다.</td>
                                             </tr>
                                         </c:if>
-                                        <c:forEach var="work" items="${eggWorkList}" varStatus="vs">
-                                            <tr id="${user.userId}">
-                                                <th>${vs.count }</th>
+                                        <c:forEach var="bin" items="${binList}" varStatus="vs">
+                                            <tr>
+                                                <th>${bin.binNo }</th>
                                                 <td>
-                                                    <a href="/adm/eggDetail.do?serialNo=${work.serialNo }&farmNo=${work.farmNo}&workSeq=${work.workSeq}">
-                                                        <fmt:formatDate value="${work.regDtm}" pattern="yyyy-MM-dd HH:mm:ss"/>
-                                                    </a>
+                                                    ${bin.currentWeight }
                                                 </td>
-                                                <td>
-                                                    ${work.farmNo}/${work.farmCount}
-                                                </td>
-                                                <td>
-                                                    ${work.inputCount}
-                                                </td>
-                                                <!-- <td>
-                                                    
-                                                </td> -->
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -201,7 +187,96 @@
                                 </table>
                             </div>
                             
+                            <div class="table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>온도</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:if test="${empty thermoList }">
+                                            <tr>
+                                                <td colspan="4">데이터가 없습니다.</td>
+                                            </tr>
+                                        </c:if>
+                                        <c:forEach var="thermo" items="${thermoList}" varStatus="vs">
+                                            <tr>
+                                                <th>${thermo.thermometerNo }</th>
+                                                <td>
+                                                    ${thermo.degree }
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                            
+                            <div class="table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>조도</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:if test="${empty lightList }">
+                                            <tr>
+                                                <td colspan="4">데이터가 없습니다.</td>
+                                            </tr>
+                                        </c:if>
+                                        <c:forEach var="light" items="${lightList}" varStatus="vs">
+                                            <tr>
+                                                <th>${light.lightNo }</th>
+                                                <td>
+                                                    ${light.lux }
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                            <div class="table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>FAN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:if test="${empty fanList }">
+                                            <tr>
+                                                <td colspan="4">데이터가 없습니다.</td>
+                                            </tr>
+                                        </c:if>
+                                        <c:forEach var="fan" items="${fanList}" varStatus="vs">
+                                            <tr>
+                                                <th>${fan.fanNo }</th>
+                                                <td>
+                                                    <c:if test="${fan.status == '2' }">
+                                                        ERR
+                                                    </c:if>
+                                                    <c:if test="${fan.status == '1' }">
+                                                        ON
+                                                    </c:if>
+                                                    <c:if test="${fan.status == '0' }">
+                                                        OFF
+                                                    </c:if>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
                         </div>
+                        
+                        
                         <!-- E: tab_con01 -->
                         
                         <!-- S: tab_con02 -->

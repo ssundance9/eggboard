@@ -72,4 +72,51 @@ public class AdminServiceImpl implements AdminService {
         
     }
 
+    @Override
+    public Map<String, Object> getEggData(Farm param) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        List<Farm> eggWorkList = eggService.getEggWorkList(param);
+        resultMap.put("eggWorkList", eggWorkList);
+        
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getEggDetail(Farm param) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        List<Egg> eggList = eggService.getEggListByFarm(param);
+        resultMap.put("eggList", eggList);
+        
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getFarmData(Farm param) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        List<Farm> farmWorkList = farmService.getFarmWorkList(param);
+        resultMap.put("farmWorkList", farmWorkList);
+        
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getFarmDetail(Farm param) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        List<Bin> binList = farmService.getBinListByFarm(param);
+        List<Fan> fanList = farmService.getFanListByFarm(param);
+        List<Light> lightList = farmService.getLightListByFarm(param);
+        List<Thermometer> thermoList = farmService.getThermoListByFarm(param);
+        
+        resultMap.put("binList", binList);
+        resultMap.put("fanList", fanList);
+        resultMap.put("lightList", lightList);
+        resultMap.put("thermoList", thermoList);
+        
+        return resultMap;
+    }
+
 }

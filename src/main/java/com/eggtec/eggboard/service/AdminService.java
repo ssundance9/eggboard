@@ -12,4 +12,12 @@ public interface AdminService {
 
     void confirmSerialNo(String userId, String serialNo);
 
+    Map<String, Object> getEggData(Farm param);
+
+    Map<String, Object> getEggDetail(Farm param);
+
+    Map<String, Object> getFarmData(Farm param);
+
+    Map<String, Object> getFarmDetail(Farm param);
+
 }

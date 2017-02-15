@@ -153,47 +153,40 @@
                                 <select name="selectFarm" id="selectFarm" style="width: 200px;">
                                     <option value="">선택</option>
                                     <c:forEach var="user" items="${userList }">
-                                        <option value="${user.serialNo }" <c:if test="${not empty user.serialNo && user.serialNo == param.serialNo }">selected="selected"</c:if>>
+                                        <option value="${user.serialNo }" <c:if test="${user.serialNo == param.serialNo }">selected="selected"</c:if>>
                                             ${user.farmName}
                                         </option>
                                     </c:forEach>
-                                </select> 
+                                </select>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;계사 ${param.farmNo }번
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;데이터 기준 일시 <fmt:formatDate value="${eggList[0].regDtm}" pattern="yyyy-MM-dd HH:mm:ss"/>
                             </div>
                             <br/><br/><br/><br/><br/><br/>
                             <div class="table">
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>전송일시</th>
-                                            <th>계사/계사총수</th>
-                                            <th>투입량</th>
-                                            <!-- <th>에러메시지</th> -->
+                                            <th>등급</th>
+                                            <th>무게구간</th>
+                                            <th>생산비율</th>
+                                            <th>생산수량</th>
+                                            <th>생산판수</th>
+                                            <th>생산중량</th>
+                                            <th>평균중량</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:if test="${empty eggWorkList }">
+                                        <c:forEach var="egg" items="${eggList}">
                                             <tr>
-                                                <td colspan="4">데이터가 없습니다.</td>
-                                            </tr>
-                                        </c:if>
-                                        <c:forEach var="work" items="${eggWorkList}" varStatus="vs">
-                                            <tr id="${user.userId}">
-                                                <th>${vs.count }</th>
-                                                <td>
-                                                    <a href="/adm/eggDetail.do?serialNo=${work.serialNo }&farmNo=${work.farmNo}&workSeq=${work.workSeq}">
-                                                        <fmt:formatDate value="${work.regDtm}" pattern="yyyy-MM-dd HH:mm:ss"/>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    ${work.farmNo}/${work.farmCount}
-                                                </td>
-                                                <td>
-                                                    ${work.inputCount}
-                                                </td>
-                                                <!-- <td>
-                                                    
-                                                </td> -->
+                                                <th>${egg.gradeName}</th>
+                                                <td></td>
+                                                <td>${egg.prodRatio}</td>
+                                                <td>${egg.qntty}</td>
+                                                <td>${egg.box}</td>
+                                                <td>${egg.totalWeight}</td>
+                                                <td>${egg.avrgWeight}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

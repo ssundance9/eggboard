@@ -76,15 +76,17 @@ public class UserServiceImpl implements UserService {
     public User modifyUser(User user, String[] henCountArray, String[] entDtArray) {
         userDao.updateUser(user);
         
-        userDao.deleteHenById(user.getUserId());
-        for (int i = 0; i < henCountArray.length; i++) {
-            Hen hen = new Hen();
-            hen.setUserId(user.getUserId());
-            hen.setFarmNo(i + 1);
-            hen.setHenCount(Integer.parseInt(henCountArray[i]));
-            hen.setEntDt(StringUtils.remove(entDtArray[i], Constants.dateSeparator));
-            
-            userDao.insertHen(hen);
+        if (henCountArray != null) {
+            userDao.deleteHenById(user.getUserId());
+            for (int i = 0; i < henCountArray.length; i++) {
+                Hen hen = new Hen();
+                hen.setUserId(user.getUserId());
+                hen.setFarmNo(i + 1);
+                hen.setHenCount(Integer.parseInt(henCountArray[i]));
+                hen.setEntDt(StringUtils.remove(entDtArray[i], Constants.dateSeparator));
+                
+                userDao.insertHen(hen);
+            }
         }
         
         return userDao.selectUserById(user.getUserId());

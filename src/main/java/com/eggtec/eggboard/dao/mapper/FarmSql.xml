@@ -137,6 +137,18 @@
         FROM   tb_error
         WHERE  reg_dtm >= DATE_ADD(NOW(), interval -1 hour)
     </select>
+    
+    <select id="selectFarmWorkList" parameterType="Farm" resultType="Farm">
+        SELECT work_seq
+             , serial_no
+             , reg_dtm
+             , water_qntty
+        FROM   tb_farm
+        WHERE  serial_no = #{serialNo}
+        AND    farm_no = 1
+        AND    (type = 'F' OR type = 'W')
+        ORDER BY work_seq DESC
+    </select>
 
 </mapper>
 

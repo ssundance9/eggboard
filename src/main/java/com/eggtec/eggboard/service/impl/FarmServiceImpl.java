@@ -93,4 +93,29 @@ public class FarmServiceImpl implements FarmService {
         
         return null;
     }
+
+    @Override
+    public List<Farm> getFarmWorkList(Farm param) {
+        return farmDao.selectFarmWorkList(param);
+    }
+
+    @Override
+    public List<Bin> getBinListByFarm(Farm param) {
+        return farmDao.selectBinListByFarm(param);
+    }
+
+    @Override
+    public List<Fan> getFanListByFarm(Farm param) {
+        return farmDao.selectFanListByFarm(param);
+    }
+
+    @Override
+    public List<Light> getLightListByFarm(Farm param) {
+        return farmDao.selectLightListByFarm(param);
+    }
+
+    @Override
+    public List<Thermometer> getThermoListByFarm(Farm param) {
+        return farmDao.selectThermoListByFarm(param);
+    }
 }

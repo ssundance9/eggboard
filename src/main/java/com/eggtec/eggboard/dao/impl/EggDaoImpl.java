@@ -49,4 +49,9 @@ public class EggDaoImpl implements EggDao {
         return sqlSession.selectOne("EggDao.selectFarmJustNow", param);
     }
 
+    @Override
+    public List<Farm> selectEggWorkList(Farm param) {
+        return sqlSession.selectList("EggDao.selectEggWorkList", param);
+    }
+
 }

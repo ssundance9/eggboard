@@ -29,4 +29,6 @@ public interface FarmDao {
     List<Farm> selectWaterListByFarm(Farm param);
 
     List<ErrorCode> selectErrorList();
+
+    List<Farm> selectFarmWorkList(Farm param);
 }

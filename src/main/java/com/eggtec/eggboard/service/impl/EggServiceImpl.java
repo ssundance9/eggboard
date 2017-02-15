@@ -150,6 +150,11 @@ public class EggServiceImpl implements EggService {
         return eggDao.selectFarmJustNow(param);
     }
 
+    @Override
+    public List<Farm> getEggWorkList(Farm param) {
+        return eggDao.selectEggWorkList(param);
+    }
+
     
 
 }
