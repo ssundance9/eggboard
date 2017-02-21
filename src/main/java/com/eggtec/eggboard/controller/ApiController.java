@@ -335,7 +335,7 @@ public class ApiController {
         eggObj.setSerialNo(serialNo);
         eggObj.setFarmNo(farmNo);
         eggObj.setGrade(getSingleNodeTextContent(egg.getChildNodes(), "grade"));
-        //eggObj.setWeightRange(getSingleNodeTextContent(egg.getChildNodes(), "weightRange"));
+        eggObj.setWeightRange(getSingleNodeTextContent(egg.getChildNodes(), "weightRange"));
         eggObj.setProdRatio(convertToDouble(getSingleNodeTextContent(egg.getChildNodes(), "productRatio")));
         eggObj.setQntty(convertToInteger(getSingleNodeTextContent(egg.getChildNodes(), "quantity")));
         eggObj.setBox(convertToInteger(getSingleNodeTextContent(egg.getChildNodes(), "box")));

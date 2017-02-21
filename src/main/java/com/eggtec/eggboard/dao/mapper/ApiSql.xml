@@ -44,6 +44,7 @@
           , serial_no
           , farm_no
           , grade
+          , weight_range
           , prod_ratio
           , qntty
           , box
@@ -58,6 +59,7 @@
           , #{serialNo}
           , #{farmNo}
           , #{grade}
+          , #{weightRange}
           , #{prodRatio}
           , #{qntty}
           , #{box}
