@@ -3,7 +3,6 @@ package com.eggtec.eggboard.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -204,8 +203,8 @@ public class UserController extends BaseController {
 
         
         
-        // 필터가 동작을 안함... 이유를 모르겠음 TODO
-        try {
+        // 필터가 동작을 안함... 이유를 모르겠음 -> 해결 filter url pattern에 *가 오타였음
+        /*try {
             user.setUserName(new String(user.getUserName().getBytes("iso-8859-1"), "utf-8"));
             user.setFarmName(new String(user.getFarmName().getBytes("iso-8859-1"), "utf-8"));
             user.setUserAddress1(new String(user.getUserAddress1().getBytes("iso-8859-1"), "utf-8"));
@@ -215,8 +214,9 @@ public class UserController extends BaseController {
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        }*/
         
+        user.setUserType(Constants.UserTypeMember);
         
         User newUser = userService.createUser(user, henCount, entDt);
         rAttributes.addFlashAttribute("user", newUser);

@@ -1,9 +1,5 @@
 package com.eggtec.eggboard.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -31,6 +26,7 @@ import com.eggtec.eggboard.model.User;
 import com.eggtec.eggboard.service.AdminService;
 import com.eggtec.eggboard.service.FrontService;
 import com.eggtec.eggboard.service.UserService;
+import com.eggtec.eggboard.util.Constants;
 
 @Controller
 public class AdminController {
@@ -270,23 +266,9 @@ public class AdminController {
             } // try - catch
         }*/ // if
 
+        user.setUserType(Constants.UserTypeMember);
         
-        
-        // 필터가 동작을 안함... 이유를 모르겠음 TODO
-        try {
-            user.setUserName(new String(user.getUserName().getBytes("iso-8859-1"), "utf-8"));
-            user.setFarmName(new String(user.getFarmName().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress1(new String(user.getUserAddress1().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress2(new String(user.getUserAddress2().getBytes("iso-8859-1"), "utf-8"));
-            
-            user.setUserType("M");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        
-        User member = frontService.modifyUser(user, null, null);
+        frontService.modifyUser(user, null, null);
         
         return "redirect:/adm/userStatus.do";
     }

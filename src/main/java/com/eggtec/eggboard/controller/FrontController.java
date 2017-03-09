@@ -2,7 +2,6 @@ package com.eggtec.eggboard.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -18,16 +16,11 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eggtec.eggboard.model.Bin;
 import com.eggtec.eggboard.model.Egg;
-import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Fan;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Hen;
@@ -282,21 +275,7 @@ public class FrontController extends BaseController {
             } // try - catch
         } // if
 
-        
-        
-        // 필터가 동작을 안함... 이유를 모르겠음 TODO
-        try {
-            user.setUserName(new String(user.getUserName().getBytes("iso-8859-1"), "utf-8"));
-            user.setFarmName(new String(user.getFarmName().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress1(new String(user.getUserAddress1().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress2(new String(user.getUserAddress2().getBytes("iso-8859-1"), "utf-8"));
-            
-            user.setUserType("M");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
+        user.setUserType(Constants.UserTypeMember);
         
         User member = frontService.modifyUser(user, henCount, entDt);
         super.getSession().setAttribute("user", member);
