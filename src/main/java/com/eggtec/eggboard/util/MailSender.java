@@ -12,16 +12,21 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
+
 public class MailSender {
+    Logger log = Logger.getLogger(this.getClass());
+    
     public static void send(String rcvEmail, String subject, String body) {
         Properties p = System.getProperties();
-        p.put("mail.smtp.starttls.enable", "true");     // gmail은 무조건 true 고정
-        p.put("mail.smtp.host", "smtp.gmail.com");      // smtp 서버 주소
+        //p.put("mail.smtp.starttls.enable", "true");     // gmail은 무조건 true 고정
+        //p.put("mail.smtp.host", "smtp.gmail.com");      // smtp 서버 주소
+        p.put("mail.smtp.host", "mw-002.cafe24.com");
         p.put("mail.smtp.auth","true");                 // gmail은 무조건 true 고정
-        p.put("mail.smtp.port", "587");                 // gmail 포트
+        p.put("mail.smtp.port", "25");                 // gmail 포트
            
         Authenticator auth = new MyAuthentication();
-         
+        
         //session 생성 및  MimeMessage생성
         Session session = Session.getDefaultInstance(p, auth);
         MimeMessage msg = new MimeMessage(session);
@@ -30,7 +35,8 @@ public class MailSender {
             //편지보낸시간
             msg.setSentDate(new Date());
             InternetAddress from = new InternetAddress() ;
-            from = new InternetAddress("no-reply<eggtecservice@gmail.com>");
+            //from = new InternetAddress("no-reply<eggtecservice@gmail.com>");
+            from = new InternetAddress("admin@eggboard.co.kr");
              
             // 이메일 발신자
             msg.setFrom(from);
@@ -62,8 +68,12 @@ class MyAuthentication extends Authenticator {
     PasswordAuthentication pa;
  
     public MyAuthentication(){
-        String id = "eggtecservice@gmail.com";       // 구글 ID
-        String pw = "eggtecservice!";          // 구글 비밀번호
+        //String id = "eggtecservice@gmail.com";       // 구글 ID
+        //String pw = "eggtecservice!";          // 구글 비밀번호
+        //String id = "admin@eggboard.co.kr";
+        //String pw = "dprm2356!!";
+        String id = "admin@eggboard.co.kr";
+        String pw = "dprm2356!!";
  
         // ID와 비밀번호를 입력한다.
         pa = new PasswordAuthentication(id, pw);
