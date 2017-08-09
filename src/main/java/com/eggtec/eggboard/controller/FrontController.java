@@ -37,22 +37,12 @@ public class FrontController extends BaseController {
     @Inject
     FrontService frontService;
     
-    /*@RequestMapping("/main")
-    public String main() {
-        return "redirect:/loginView.do";
-    }*/
-    
     @SuppressWarnings("unchecked")
     @RequestMapping("/frt/eggStatus.do")
     public String eggStatus(Model model) {
         model.addAttribute("uri", super.getRequest().getRequestURI());
         
         User user = super.getUser();
-        
-        // 최근 데이터를 보여줌
-        /*if (farmNo == null) {
-            farmNo = 1;
-        }*/
         
         Farm param = new Farm();
         param.setSerialNo(user.getSerialNo());
@@ -74,7 +64,6 @@ public class FrontController extends BaseController {
         
         
         return getViewPrepix() + "/frt/eggStatus";
-        
     }
     
     @SuppressWarnings("unchecked")
@@ -254,12 +243,6 @@ public class FrontController extends BaseController {
             
             user.setPhotoInfo(fileName);
             try {
-                // 1. FileOutputStream 사용
-                // byte[] fileData = file.getBytes();
-                // FileOutputStream output = new FileOutputStream("C:/images/" + fileName);
-                // output.write(fileData);
-                 
-                // 2. File 사용
                 String uploadPath = request.getServletContext().getRealPath("/upload");
                 String today = new SimpleDateFormat("/yyyyMMdd/").format(new Date());
                 uploadPath = uploadPath + today + user.getUserId() + "/";
@@ -272,8 +255,8 @@ public class FrontController extends BaseController {
                 user.setPhotoInfo("/upload" + today + user.getUserId()  + "/" + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
-            } // try - catch
-        } // if
+            }
+        }
 
         user.setUserType(Constants.UserTypeMember);
         

@@ -72,6 +72,12 @@
             } else {
                 $("#spanUserPwNotice").hide();
             }
+            
+            if (!validatePwChk($("input#userPwChk").val())) {
+                $("#spanUserPwChkNotice").show();
+            } else {
+                $("#spanUserPwChkNotice").hide();
+            }
         });
         
         // 비밀번호 재입력
@@ -286,6 +292,7 @@
         var pattern1 = /[A-Z]/gi;
         var pattern2 = /[0-9]/gi;
         var pattern3 = /[~!@#$%^&*|\\\'\";:\/?]/gi;
+        
         if (!pattern1.test(pw) || !pattern2.test(pw) || !pattern3.test(pw)) {
             return false;
         }
@@ -480,7 +487,7 @@
                                         <span class="th">비밀번호</span>
                                         <div>
                                             <input type="password" id="userPw" class="" name="userPw" value="${member.userPw }" placeholder="영문/숫자/특수문자 조합 6~12자" maxlength="12">
-                                            <span class="notice" id="spanUserPwNotice" style="display:none;">올바른 비밀번호를 입력해주세요.</span>
+                                            <span class="notice" id="spanUserPwNotice" style="display:none;">올바른 비밀번호를 입력해주세요(영문/숫자/특수문자 조합 6~12자).</span>
                                         </div>
                                     </li>
                                     <li>

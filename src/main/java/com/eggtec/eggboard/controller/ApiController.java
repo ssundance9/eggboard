@@ -41,11 +41,6 @@ public class ApiController {
     @Inject
     ApiService apiService;
     
-    /*@RequestMapping("/api/test")
-    public String test(HttpServletRequest req) {
-        return null;
-    }*/
-    
     @RequestMapping("/api/uploadEggData")
     public String uploadEggData(HttpServletRequest req) {
         String message = "";

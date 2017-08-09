@@ -165,7 +165,7 @@
     <update id="updateUser" parameterType="User">
         UPDATE tb_user
         SET    user_name        = #{userName}
-             <!-- , user_pw          = #{userPw} -->
+             , user_pw          = #{userPw}
              , user_mphone      = #{userMphone}
              , user_mphone1     = #{userMphone1}
              , user_mphone2     = #{userMphone2}

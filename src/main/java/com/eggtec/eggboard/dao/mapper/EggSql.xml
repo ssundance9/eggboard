@@ -35,7 +35,7 @@
     </select>
     
     <select id="selectFarmJustNow" parameterType="Farm" resultType="Farm">
-        /* selectFarm */
+        /* selectFarmJustNow */
         SELECT a.work_seq             workSeq
              , a.serial_no            serialNo
              , a.farm_no              farmNo
@@ -58,7 +58,7 @@
              , a.mod_dtm              modDtm
         FROM   tb_farm a
         WHERE  a.serial_no = #{serialNo}
-        <if test="farmNo != null">
+        <if test="farmNo != null and farmNo != 0">
             AND    a.farm_no   = #{farmNo}
         </if>
         AND    a.type      = #{type}

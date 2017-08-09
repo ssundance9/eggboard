@@ -68,11 +68,6 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         
-        /*for (Bin b : binList) {
-            b.setWorkSeq(workSeq);
-            apiDao.insertBin(b);
-        }*/
-        
         for (Thermometer t : thermoList) {
             t.setWorkSeq(workSeq);
             apiDao.insertThermo(t);

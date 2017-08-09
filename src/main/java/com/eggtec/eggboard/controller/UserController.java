@@ -156,36 +156,12 @@ public class UserController extends BaseController {
     public String registUser(Model model, User user, String[] henCount, String[] entDt
             , HttpServletRequest request, RedirectAttributes rAttributes) {
         
-        
-        /*log.debug(user.getUserName() + "!!!!!!!!!!!!!!!!!!!1");
-        log.debug(request.getCharacterEncoding() + "!!!!!!!!!!!!!!!!!!!1");
-        
-        
-        String originalStr = user.getUserName(); // 테스트 
-        String [] charSet = {"utf-8","euc-kr","ksc5601","iso-8859-1","x-windows-949"};
-          
-        for (int i=0; i<charSet.length; i++) {
-         for (int j=0; j<charSet.length; j++) {
-          try {
-           System.out.println("[" + charSet[i] +"," + charSet[j] +"] = " + new String(originalStr.getBytes(charSet[i]), charSet[j]));
-          } catch (UnsupportedEncodingException e) {
-           e.printStackTrace();
-          }
-         }
-        }*/
-        
         MultipartFile uploadfile = user.getUploadFile();
         if (uploadfile != null && !uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();
             
             user.setPhotoInfo(fileName);
             try {
-                // 1. FileOutputStream 사용
-                // byte[] fileData = file.getBytes();
-                // FileOutputStream output = new FileOutputStream("C:/images/" + fileName);
-                // output.write(fileData);
-                 
-                // 2. File 사용
                 String uploadPath = request.getServletContext().getRealPath("/upload");
                 String today = new SimpleDateFormat("/yyyyMMdd/").format(new Date());
                 uploadPath = uploadPath + today + user.getUserId() + "/";
@@ -201,20 +177,6 @@ public class UserController extends BaseController {
             } // try - catch
         } // if
 
-        
-        
-        // 필터가 동작을 안함... 이유를 모르겠음 -> 해결 filter url pattern에 *가 오타였음
-        /*try {
-            user.setUserName(new String(user.getUserName().getBytes("iso-8859-1"), "utf-8"));
-            user.setFarmName(new String(user.getFarmName().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress1(new String(user.getUserAddress1().getBytes("iso-8859-1"), "utf-8"));
-            user.setUserAddress2(new String(user.getUserAddress2().getBytes("iso-8859-1"), "utf-8"));
-            
-            user.setUserType("M");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
         
         user.setUserType(Constants.UserTypeMember);
         

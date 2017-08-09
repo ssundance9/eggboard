@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.eggtec.eggboard.dao.EggDao;
 import com.eggtec.eggboard.model.Code;
 import com.eggtec.eggboard.model.Egg;
-import com.eggtec.eggboard.model.ErrorCode;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.Hen;
 import com.eggtec.eggboard.service.EggService;

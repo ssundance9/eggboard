@@ -64,14 +64,6 @@ public class AdminController {
             model.addAttribute("eggWorkList", eggWorkList);
         }
         
-        
-        /*Map<String, Object> resultMap = adminService.getEggStatus(param, userId);
-        Farm farm = (Farm) resultMap.get("farmInfo");
-        List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
-        
-        model.addAttribute("farm", farm);
-        model.addAttribute("eggList", eggList);*/
-        
         model.addAttribute("today", new Date());
         
         return "/adm/eggStatus";
@@ -102,13 +94,6 @@ public class AdminController {
         }
         
         
-        /*Map<String, Object> resultMap = adminService.getEggStatus(param, userId);
-        Farm farm = (Farm) resultMap.get("farmInfo");
-        List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
-        
-        model.addAttribute("farm", farm);
-        model.addAttribute("eggList", eggList);*/
-        
         model.addAttribute("today", new Date());
         
         return "/adm/eggDetail";
@@ -136,25 +121,6 @@ public class AdminController {
             
             model.addAttribute("farmWorkList", farmWorkList);
         }
-        
-        
-        /*Farm param = new Farm();
-        param.setSerialNo(serialNo);
-        param.setFarmNo(1); // 임시번호
-        param.setType("F");
-        
-        Map<String, Object> resultMap = adminService.getFarmStatus(param, null);
-        Farm farm = (Farm) resultMap.get("farmInfo");
-        List<Bin> binList = (List<Bin>) resultMap.get("binInfo");
-        List<Fan> fanList = (List<Fan>) resultMap.get("fanInfo");
-        List<Light> lightList = (List<Light>) resultMap.get("lightInfo");
-        List<Thermometer> thermoList = (List<Thermometer>) resultMap.get("thermoInfo");
-        
-        model.addAttribute("farm", farm);
-        model.addAttribute("binList", binList);
-        model.addAttribute("fanList", fanList);
-        model.addAttribute("lightList", lightList);
-        model.addAttribute("thermoList", thermoList);*/
         
         return "/adm/farmStatus";
     }
@@ -189,14 +155,6 @@ public class AdminController {
             model.addAttribute("lightList", lightList);
             model.addAttribute("thermoList", thermoList);
         }
-        
-        
-        /*Map<String, Object> resultMap = adminService.getEggStatus(param, userId);
-        Farm farm = (Farm) resultMap.get("farmInfo");
-        List<Egg> eggList = (List<Egg>) resultMap.get("eggInfo");
-        
-        model.addAttribute("farm", farm);
-        model.addAttribute("eggList", eggList);*/
         
         model.addAttribute("today", new Date());
         
@@ -238,34 +196,6 @@ public class AdminController {
     
     @RequestMapping("/adm/modifyUser.do") 
     public String modifyUser(Model model, User user, HttpServletRequest request, RedirectAttributes rAttributes) {
-        
-        //MultipartFile uploadfile = user.getUploadFile();
-        /*if (uploadfile != null && !uploadfile.isEmpty()) {
-            String fileName = uploadfile.getOriginalFilename();
-            
-            user.setPhotoInfo(fileName);
-            try {
-                // 1. FileOutputStream 사용
-                // byte[] fileData = file.getBytes();
-                // FileOutputStream output = new FileOutputStream("C:/images/" + fileName);
-                // output.write(fileData);
-                 
-                // 2. File 사용
-                String uploadPath = request.getServletContext().getRealPath("/upload");
-                String today = new SimpleDateFormat("/yyyyMMdd/").format(new Date());
-                uploadPath = uploadPath + today + user.getUserId() + "/";
-                File file = new File(uploadPath + fileName);
-                if(!file.exists()) {
-                    file.mkdirs();
-                }
-                uploadfile.transferTo(file);
-                
-                user.setPhotoInfo("/upload" + today + user.getUserId()  + "/" + fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } // try - catch
-        }*/ // if
-
         user.setUserType(Constants.UserTypeMember);
         
         frontService.modifyUser(user, null, null);

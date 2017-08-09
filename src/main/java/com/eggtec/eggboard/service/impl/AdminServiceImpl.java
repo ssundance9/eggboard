@@ -44,22 +44,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Map<String, Object> getFarmStatus(Farm param, String userId) {
         return farmService.getFarmStatus(param, userId);
-        
-        /*Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        Farm farm = adminDao.selectFarm(param);
-        List<Bin> binList = adminDao.selectBinListByFarm(farm);
-        List<Fan> fanList = adminDao.selectFanListByFarm(farm);
-        List<Light> lightList = adminDao.selectLightListByFarm(farm);
-        List<Thermometer> thermoList = adminDao.selectThermoListByFarm(farm);
-        
-        resultMap.put("farmInfo", farm);
-        resultMap.put("binInfo", binList);
-        resultMap.put("fanInfo", fanList);
-        resultMap.put("lightInfo", lightList);
-        resultMap.put("thermoInfo", thermoList);
-        
-        return resultMap;*/
     }
 
     @Override

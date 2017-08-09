@@ -1,6 +1,5 @@
 package com.eggtec.eggboard.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,14 +8,12 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.eggtec.eggboard.model.Bin;
-import com.eggtec.eggboard.model.Egg;
 import com.eggtec.eggboard.model.Farm;
 import com.eggtec.eggboard.model.User;
 import com.eggtec.eggboard.service.EggService;
 import com.eggtec.eggboard.service.FarmService;
 import com.eggtec.eggboard.service.FrontService;
 import com.eggtec.eggboard.service.UserService;
-import com.eggtec.eggboard.util.Constants;
 
 @Service
 public class FrontServiceImpl implements FrontService {
